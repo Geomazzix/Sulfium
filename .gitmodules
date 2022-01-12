@@ -1,0 +1,18 @@
+[submodule "Sulfium/Externals/Tinygltf"]
+	path = Sulfium/Externals/Tinygltf
+	url = https://github.com/syoyo/tinygltf
+[submodule "Sulfium/Externals/Glm"]
+	path = Sulfium/Externals/Glm
+	url = https://github.com/g-truc/glm
+[submodule "Sulfium/Externals/Spdlog"]
+	path = Sulfium/Externals/Spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Sulfium/Externals/Imgui"]
+	path = Sulfium/Externals/Imgui
+	url = https://github.com/ocornut/imgui
+[submodule "Sulfium/Externals/Imguizmo"]
+	path = Sulfium/Externals/Imguizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo
+[submodule "Sulfium/Externals/Stb"]
+	path = Sulfium/Externals/Stb
+	url = https://github.com/nothings/stb
