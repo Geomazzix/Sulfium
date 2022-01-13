@@ -7,9 +7,6 @@
 [submodule "Sulfium/Externals/Spdlog"]
 	path = Sulfium/Externals/Spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "Sulfium/Externals/Imgui"]
-	path = Sulfium/Externals/Imgui
-	url = https://github.com/ocornut/imgui
 [submodule "Sulfium/Externals/Imguizmo"]
 	path = Sulfium/Externals/Imguizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo
