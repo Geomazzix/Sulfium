@@ -13,3 +13,7 @@
 [submodule "Sulfium/Externals/Stb"]
 	path = Sulfium/Externals/Stb
 	url = https://github.com/nothings/stb
+[submodule "Sulfium/Externals/Imgui"]
+	path = Sulfium/Externals/Imgui
+	url = https://github.com/ocornut/imgui
+	branch = docking
