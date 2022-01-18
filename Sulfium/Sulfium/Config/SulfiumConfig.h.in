@@ -1,0 +1,4 @@
+//The sulfium core options.
+#define Sulfium_VERSION_MAJOR @Sulfium_VERSION_MAJOR@
+#define Sulfium_VERSION_MINOR @Sulfium_VERSION_MINOR@
+#define Sulfium_HOMEPAGE_URL @Sulfium_HOMEPAGE_URL@
