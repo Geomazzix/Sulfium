@@ -17,6 +17,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(SULFIUM_DIRECTORY ${CMAKE_SOURCE_DIR}/Sulfium)
 set(SULFIUM_RENDERCORE_DIRECTORY ${CMAKE_SOURCE_DIR}/Modules/RenderCore)
 
+#Sets the output directories all in one place.
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Bin/Lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Bin/Lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Bin)
+
 #Add all the 3rd party dependencies, project modules. They are called module, though this should not be confused with the CMake terminology for a "Module Library", more on this
 #is explained in the cmake list file in the Modules folder.
 add_subdirectory(Externals)
