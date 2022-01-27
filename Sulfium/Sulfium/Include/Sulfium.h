@@ -1,6 +1,6 @@
 #pragma once
 #include "SulfiumConfig.h"
-#include "RenderCore.h"
+//#include "RenderCore.h"
 
 namespace SFM
 {
@@ -14,6 +14,6 @@ namespace SFM
 		~Sulfium();
 
 	private:
-		RenderCore m_renderCore;
+		//RenderCore m_renderCore;
 	};
 }
