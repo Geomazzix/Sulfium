@@ -12,18 +12,32 @@ set(SOURCE_FILES
 	Src/RenderCore.cpp
 )
 
-add_library(
+SULFIUM_ADD_INTERNAL_STATIC_LIB(
 	RenderCore
-	STATIC
 	${HEADER_FILES}
 	${SOURCE_FILES}
 )
 
 target_include_directories(RenderCore PUBLIC
-	Include
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include>
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/RenderCore>
 )
 
-#Creating the PCH
+set_target_properties(RenderCore PROPERTIES
+	FOLDER 
+		Modules
+)
+
 target_precompile_headers(
 	RenderCore PUBLIC Include/Pch.h
+)
+
+SULFIUM_INSTALL_AND_EXPORT_TARGETS(
+	RenderCore 
+	""
+)
+
+SULFIUM_INSTALL_HEADERS(
+	RenderCore
+	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )

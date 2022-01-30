@@ -1,5 +1,6 @@
 @PACKAGE_INIT@
 
 include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@Exports.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/SulfiumModuleUtility.cmake)
 
 check_required_Components(@PROJECT_NAME@)
