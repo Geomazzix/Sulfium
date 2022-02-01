@@ -11,6 +11,9 @@ namespace SFM
 		ThreadSystem();
 		~ThreadSystem();
 
+		void Initialize();
+		void Terminate();
+
 	private:
 
 	};

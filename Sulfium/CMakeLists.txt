@@ -1,9 +1,12 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
+
+#Making sure all cmake files can be found.
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 
 #Helpers for the installation of the project.
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
-include(${CMAKE_SOURCE_DIR}/Cmake/SulfiumModuleUtility.cmake)
+include(SulfiumModuleUtility)
 
 set(PROJECT_NAME Sulfium)
 
@@ -45,25 +48,9 @@ option(SULFIUM_INSTALL "Installs the full build into an provided install directo
 add_subdirectory(Modules)
 add_subdirectory(Sulfium)
 
-#Generate the config file for the entire project, used to import all the targets required by find_package().
-configure_package_config_file(
-	${PROJECT_SOURCE_DIR}/CMake/${PROJECT_NAME}Config.cmake.in
-	${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-INSTALL_DESTINATION
-	${CMAKE_INSTALL_LIBDIR}/cmake/Sulfium
-)
-
-#Write the version file, which takes care of the package version control.
-write_basic_package_version_file(
-	${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
-	VERSION ${PROJECT_VERSION}
-	COMPATIBILITY SameMajorVersion
-)
-
-#Install both files in the cmake install directory located in lib/cmake/${PROJECT_NAME}
+#Install the cmake utility files in the cmake install directory located in lib/cmake/${PROJECT_NAME}
 install(FILES
-	${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
-	${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+	${PROJECT_SOURCE_DIR}/CMake/${PROJECT_NAME}ModuleUtility.cmake
 DESTINATION
 	${CMAKE_INSTALL_LIBDIR}/CMake/Sulfium
 )

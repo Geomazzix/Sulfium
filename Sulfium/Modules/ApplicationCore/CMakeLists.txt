@@ -1,20 +1,30 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
 set(HEADER_FILES
-	Include/ApplicationCore.h
+	Include/ApplicationCore/ApplicationCore.h
 )
 
 set(SOURCE_FILES
 	Src/ApplicationCore.cpp
 )
 
-add_library(
+SULFIUM_ADD_INTERNAL_STATIC_LIB(
 	ApplicationCore
-	STATIC
 	${HEADER_FILES}
 	${SOURCE_FILES}
 )
 
 target_include_directories(ApplicationCore PUBLIC
-	Include
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include/>
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ApplicationCore>
+)
+
+set_target_properties(ApplicationCore PROPERTIES
+	FOLDER 
+		Modules
+)
+
+SULFIUM_INSTALL_HEADERS(
+	ApplicationCore
+	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )

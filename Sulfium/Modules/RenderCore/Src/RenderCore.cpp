@@ -1,4 +1,4 @@
-#include "RenderCore.h"
+#include "RenderCore/RenderCore.h"
 
 namespace SFM
 {

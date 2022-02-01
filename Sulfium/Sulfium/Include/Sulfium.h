@@ -1,6 +1,7 @@
 #pragma once
-#include "SulfiumConfig.h"
-//#include "RenderCore.h"
+#include <ThreadSystem/ThreadSystem.h>
+#include <RenderCore/RenderCore.h>
+#include <ApplicationCore/ApplicationCore.h>
 
 namespace SFM
 {
@@ -14,6 +15,8 @@ namespace SFM
 		~Sulfium();
 
 	private:
-		//RenderCore m_renderCore;
+		ApplicationCore m_appCore;
+		RenderCore m_renderCore;
+		ThreadSystem m_threadSystem;
 	};
 }

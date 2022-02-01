@@ -11,6 +11,9 @@ namespace SFM
 		ApplicationCore();
 		~ApplicationCore();
 
+		void Initialize();
+		void Terminate();
+
 	private:
 
 	};
