@@ -50,8 +50,7 @@ option(USE_SULFIUM_GLTF "Specify whether the user wants to use the Sulfium GLTF 
 add_subdirectory(Modules)
 add_subdirectory(Sulfium)
 
-#INSTALLING SULFIUM
-if(${SULFIUM_INSTALL})
+if(SULFIUM_INSTALL)
 
 #Install the cmake utility files in the cmake install directory located in lib/cmake/${PROJECT_NAME}
 install(FILES
@@ -68,11 +67,11 @@ set(SULFIUM_EXPORT_TARGETS
 	RenderCore
 )
 
-if(${BUILD_VULKAN_BACKEND})
+if(BUILD_VULKAN_BACKEND)
 list(APPEND SULFIUM_EXPORT_TARGETS VulkanRenderer) #Component loaded in on runtime as shared library
 endif()
 
-if(${USE_SULFIUM_GLTF})
+if(USE_SULFIUM_GLTF)
 list(APPEND SULFIUM_EXPORT_TARGETS Gltf)
 endif()
 

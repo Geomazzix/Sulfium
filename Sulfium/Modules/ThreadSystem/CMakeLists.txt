@@ -24,7 +24,7 @@ set_target_properties(ThreadSystem PROPERTIES
 		Modules
 )
 
-if(${SULFIUM_INSTALL})
+if(SULFIUM_INSTALL)
 SULFIUM_INSTALL_HEADERS(
 	ThreadSystem
 	${CMAKE_CURRENT_SOURCE_DIR}/Include

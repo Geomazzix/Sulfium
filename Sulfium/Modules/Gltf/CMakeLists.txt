@@ -31,7 +31,7 @@ set_target_properties(Gltf PROPERTIES
 		Modules
 )
 
-if(${SULFIUM_INSTALL})
+if(SULFIUM_INSTALL)
 SULFIUM_INSTALL_HEADERS(
 	Gltf
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/

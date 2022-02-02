@@ -33,7 +33,7 @@ set_target_properties(VulkanRenderer PROPERTIES
 		Modules
 )
 
-if(${SULFIUM_INSTALL})
+if(SULFIUM_INSTALL)
 SULFIUM_INSTALL_HEADERS(
 	VulkanRenderer
 	${CMAKE_CURRENT_SOURCE_DIR}/Include/

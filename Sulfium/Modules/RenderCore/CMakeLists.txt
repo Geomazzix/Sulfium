@@ -42,7 +42,7 @@ target_precompile_headers(
 	RenderCore PUBLIC Include/RenderCore/Pch.h
 )
 
-if(${SULFIUM_INSTALL})
+if(SULFIUM_INSTALL)
 SULFIUM_INSTALL_HEADERS(
 	RenderCore
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
