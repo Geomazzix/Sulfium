@@ -5,7 +5,7 @@
 # - sulfium_add_internal_static_lib
 # - sulfium_install_targets
 # - sulfium_install_headers
-
+# - sulfium_add_internal_shared_lib
 
 #MODULE/LIBRARY UTILITY.
 ##############################################################################################################
@@ -62,6 +62,19 @@ function(sulfium_add_internal_static_lib NAME)
 
 endfunction()
 
+#Adding a shared library to the project.
+function(sulfium_add_internal_shared_lib NAME)
+    add_library(
+        ${NAME} 
+        SHARED 
+        ${ARGN}
+    )
+
+    if (MSVC)
+        set_target_properties(${NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
+endfunction()
+
 ##############################################################################################################
 
 
@@ -79,7 +92,7 @@ function(sulfium_install_and_export_targets TARGET_NAME)
 	        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		        NAMELINK_SKIP #Skip on first try in order to export the library as Sulfium-major.minor.patch.lib
 	        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+	        RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
 
         #The export meta data - in this case a file that concerns itself to the targets mentioned above.
@@ -96,7 +109,7 @@ function(sulfium_install_and_export_targets TARGET_NAME)
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 		        NAMELINK_ONLY
 	        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-	        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+	        RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         )
 
@@ -132,7 +145,7 @@ function(sulfium_install_headers NAME HEADER_DIR)
         if(${NAME} STREQUAL "Sulfium")
             set(HEADER_DESTINATION_DIRECTORY ${CMAKE_INSTALL_INCLUDEDIR}/Core)
         else()
-            set(HEADER_DESTINATION_DIRECTORY ${CMAKE_INSTALL_INCLUDEDIR}/${NAME})
+            set(HEADER_DESTINATION_DIRECTORY ${CMAKE_INSTALL_INCLUDEDIR}/)
         endif()
 
         #Installing the current target's headers.

@@ -22,6 +22,16 @@ target_include_directories(RenderCore PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include/>
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/RenderCore>
 )
+target_compile_definitions(RenderCore PRIVATE
+	$<BUILD_INTERFACE:SULFIUM_DLL_DIRECTORY="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/">
+	$<INSTALL_INTERFACE:SULFIUM_DLL_DIRECTORY="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/">
+)
+
+if(${BUILD_VULKAN_BACKEND})
+target_compile_definitions(RenderCore PRIVATE
+	VULKAN_BACKEND
+)
+endif()
 
 set_target_properties(RenderCore PROPERTIES
 	FOLDER 
@@ -32,7 +42,9 @@ target_precompile_headers(
 	RenderCore PUBLIC Include/RenderCore/Pch.h
 )
 
+if(${SULFIUM_INSTALL})
 SULFIUM_INSTALL_HEADERS(
 	RenderCore
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
+endif()

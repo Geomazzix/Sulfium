@@ -1,5 +1,5 @@
 #pragma once
-#include "IGraphicsAPI.h"
+#include "RenderCore/IGraphicsAPI.h"
 
 namespace SFM
 {

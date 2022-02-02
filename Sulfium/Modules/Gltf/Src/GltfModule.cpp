@@ -1,4 +1,4 @@
-#include "GltfModule.h"
+#include "Gltf/GltfModule.h"
 
 namespace SFM
 {

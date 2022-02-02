@@ -8,7 +8,8 @@ namespace SFM
 	/// </summary>
 	enum class EGraphicsAPI
 	{
-		VULKAN	= 0,
+		UNIDENTIFIED = -1,
+		VULKAN = 0,
 		DX12,
 		OPENGL,
 

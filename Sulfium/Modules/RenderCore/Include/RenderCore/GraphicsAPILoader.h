@@ -28,8 +28,8 @@ namespace SFM
 	/// </summary>
 	struct GraphicsAPIModule
 	{
-		IGraphicsAPI* Handle;
-		SharedLib Process;
+		IGraphicsAPI* Handle = nullptr;
+		SharedLib Process = nullptr;
 	};
 
 	/// <summary>

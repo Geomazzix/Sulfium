@@ -1,4 +1,4 @@
-#include "VulkanRenderer.h"
+#include "VulkanRenderer/VulkanRenderer.h"
 
 namespace SFM
 {
@@ -14,12 +14,10 @@ namespace SFM
 
 	void VulkanRenderer::Initialize()
 	{
-		somevalue = 1;
 	}
 
 	void VulkanRenderer::Terminate()
 	{
-		somevalue = 0;
 	}
 
 }

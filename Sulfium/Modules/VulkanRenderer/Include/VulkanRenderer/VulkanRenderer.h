@@ -15,6 +15,5 @@ namespace SFM
 		void Terminate();
 
 	private:
-		int somevalue = 0;
 	};
 }

@@ -74,7 +74,11 @@ namespace SFM
 
 	char* GraphicsAPILoader::GetModuleRootFolder()
 	{
-		return "../Modules/";
+#if defined(SULFIUM_DLL_DIRECTORY)
+		return SULFIUM_DLL_DIRECTORY;
+#else
+		return "";
+#endif
 	}
 
 #if defined(WIN32) || defined(WIN64)

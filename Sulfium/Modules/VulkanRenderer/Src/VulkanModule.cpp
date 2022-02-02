@@ -1,5 +1,5 @@
-#include "VulkanModule.h"
-#include "DLLDefines.h"
+#include "VulkanRenderer/VulkanModule.h"
+#include "RenderCore/DLLDefines.h"
 #include <cstdio>
 
 namespace SFM

@@ -9,5 +9,11 @@ add_subdirectory(RenderCore)
 
 #Though these are optional they still have to be linked, since run-time DLL support will not be maintained due to the lack of interestand resources that can be
 #spend on the project, therefore static libs containing the function symbols still need to be linked against and resolved by the linker.
-#add_subdirectory(VulkanRenderer)
-#add_subdirectory(Gltf)
+
+if(${BUILD_VULKAN_BACKEND})
+add_subdirectory(VulkanRenderer)
+endif()
+
+if(${USE_SULFIUM_GLTF})
+add_subdirectory(Gltf)
+endif()

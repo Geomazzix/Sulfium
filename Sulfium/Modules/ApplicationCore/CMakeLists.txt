@@ -24,7 +24,9 @@ set_target_properties(ApplicationCore PROPERTIES
 		Modules
 )
 
+if(${SULFIUM_INSTALL})
 SULFIUM_INSTALL_HEADERS(
 	ApplicationCore
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
+endif()

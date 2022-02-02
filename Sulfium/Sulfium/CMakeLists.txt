@@ -36,13 +36,6 @@ target_precompile_headers(
 	Sulfium PUBLIC Include/Pch.h
 )
 
-sulfium_install_and_export_targets(
-	Sulfium
-	ThreadSystem
-	ApplicationCore
-	RenderCore
-)
-
 sulfium_install_headers(
 	Sulfium
 	${CMAKE_CURRENT_SOURCE_DIR}/Include

@@ -3,7 +3,7 @@
 namespace SFM
 {
 	RenderCore::RenderCore() :
-		m_activeGraphicsAPI(EGraphicsAPI::COUNT),
+		m_activeGraphicsAPI(EGraphicsAPI::UNIDENTIFIED),
 		m_graphicsAPI(nullptr)
 	{
 
@@ -37,7 +37,12 @@ namespace SFM
 		switch (api)
 		{
 		case EGraphicsAPI::VULKAN:
-			m_graphicsAPI = m_graphicsAPILoader.LoadGraphicsAPI("VulkanRenderer/VulkanRenderer").Handle;
+#if defined(VULKAN_BACKEND)
+			m_graphicsAPI = m_graphicsAPILoader.LoadGraphicsAPI("VulkanRenderer").Handle;
+			m_activeGraphicsAPI = EGraphicsAPI::VULKAN;
+#else
+			printf("ERROR: Trying to load in a backend that hasn't been build!\n Make sure to set BUILD_VULKAN_BACKEND to ON during the CMake build process!");
+#endif
 			break;
 		case EGraphicsAPI::DX12:
 			printf("ERROR: Currently no DX12 support has been written!\n");
@@ -47,9 +52,13 @@ namespace SFM
 			break;
 		default:
 			printf("ERROR: Unknown Graphics API!\n");
+			m_activeGraphicsAPI = EGraphicsAPI::UNIDENTIFIED;
 			break;
 		}
 
-		m_graphicsAPI->Initialize();
+		if (m_activeGraphicsAPI != EGraphicsAPI::UNIDENTIFIED)
+		{
+			m_graphicsAPI->Initialize();
+		}
 	}
 }

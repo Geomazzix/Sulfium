@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(HEADER_FILES
-	Include/VulkanModule.h
-	Include/VulkanRenderer.h
+	Include/VulkanRenderer/VulkanModule.h
+	Include/VulkanRenderer/VulkanRenderer.h
 )
 
 set(SOURCE_FILES
@@ -10,21 +10,32 @@ set(SOURCE_FILES
 	Src/VulkanRenderer.cpp
 )
 
-add_library(
+SULFIUM_ADD_INTERNAL_SHARED_LIB(
 	VulkanRenderer
-	SHARED
 	${HEADER_FILES}
 	${SOURCE_FILES}
 )
 
 target_include_directories(VulkanRenderer PUBLIC
-	Include
-	${SULFIUM_DIRECTORY}/Include
-	${SULFIUM_RENDERCORE_DIRECTORY}/Include
-	${CMAKE_CURRENT_BINARY_DIR}
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include/>
+	$<BUILD_INTERFACE:${SULFIUM_RENDERCORE_DIRECTORY}/Include/>
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/VulkanRenderer>
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/RenderCore>
 )
 
 #Enables DLL symbol export.
-target_compile_definitions(VulkanRenderer PUBLIC
+target_compile_definitions(VulkanRenderer PRIVATE
 	WIN_EXPORT
 )
+
+set_target_properties(VulkanRenderer PROPERTIES
+	FOLDER 
+		Modules
+)
+
+if(${SULFIUM_INSTALL})
+SULFIUM_INSTALL_HEADERS(
+	VulkanRenderer
+	${CMAKE_CURRENT_SOURCE_DIR}/Include/
+)
+endif()

@@ -15,7 +15,7 @@ SULFIUM_ADD_INTERNAL_STATIC_LIB(
 )
 
 target_include_directories(ThreadSystem PUBLIC
-	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include/>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include>
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ThreadSystem>
 )
 
@@ -24,7 +24,9 @@ set_target_properties(ThreadSystem PROPERTIES
 		Modules
 )
 
+if(${SULFIUM_INSTALL})
 SULFIUM_INSTALL_HEADERS(
 	ThreadSystem
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
+endif()
