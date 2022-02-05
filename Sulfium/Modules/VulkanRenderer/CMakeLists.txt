@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
+find_package(Vulkan)
+if(NOT Vulkan_FOUND)
+	message(FATAL_ERROR "ERROR: Make sure to have the Vulkan SDK installed!")
+endif()
+
 set(HEADER_FILES
 	Include/VulkanRenderer/VulkanModule.h
 	Include/VulkanRenderer/VulkanRenderer.h
@@ -10,7 +15,7 @@ set(SOURCE_FILES
 	Src/VulkanRenderer.cpp
 )
 
-SULFIUM_ADD_INTERNAL_SHARED_LIB(
+SULFIUM_ADD_INTERNAL_MODULE_LIB(
 	VulkanRenderer
 	${HEADER_FILES}
 	${SOURCE_FILES}
@@ -21,6 +26,10 @@ target_include_directories(VulkanRenderer PUBLIC
 	$<BUILD_INTERFACE:${SULFIUM_RENDERCORE_DIRECTORY}/Include/>
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/VulkanRenderer>
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/RenderCore>
+)
+
+target_link_libraries(
+	glm_static
 )
 
 #Enables DLL symbol export.

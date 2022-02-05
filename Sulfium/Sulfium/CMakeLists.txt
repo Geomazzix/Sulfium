@@ -11,7 +11,7 @@ set(SOURCE_FILES
 )
 
 #Add the main library of the project.
-sulfium_add_internal_lib(
+SULFIUM_ADD_INTERNAL_LIB(
 	Sulfium
 	${HEADER_FILES}
 	${SOURCE_FILES}
@@ -29,6 +29,7 @@ target_link_libraries(Sulfium PUBLIC
 	ThreadSystem
 	ApplicationCore
 	RenderCore
+	Spdlog
 )
 
 #Creating the PCH

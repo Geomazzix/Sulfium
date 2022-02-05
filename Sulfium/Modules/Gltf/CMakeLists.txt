@@ -26,6 +26,10 @@ target_compile_definitions(Gltf PRIVATE
 	WIN_EXPORT
 )
 
+target_link_libraries(Gltf PRIVATE
+	tinygltf
+)
+
 set_target_properties(Gltf PROPERTIES
 	FOLDER 
 		Modules

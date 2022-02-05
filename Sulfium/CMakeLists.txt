@@ -46,7 +46,7 @@ option(USE_SULFIUM_GLTF "Specify whether the user wants to use the Sulfium GLTF 
 
 #Add all the 3rd party dependencies, project modules. They are called module, though this should not be confused with the CMake terminology for a "Module Library", more on this
 #is explained in the cmake list file in the Modules folder.
-#add_subdirectory(Externals)
+add_subdirectory(Externals)
 add_subdirectory(Modules)
 add_subdirectory(Sulfium)
 
@@ -65,6 +65,9 @@ set(SULFIUM_EXPORT_TARGETS
 	ThreadSystem
 	ApplicationCore
 	RenderCore
+	glm
+	Spdlog
+	tinygltf
 )
 
 if(BUILD_VULKAN_BACKEND)

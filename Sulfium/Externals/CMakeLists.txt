@@ -1,103 +1,139 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
-#Sets helper directory.
-set(EXTERNAL_DEPENDENCIES_DIRECTORY ${CMAKE_SOURCE_DIRECTORY}/Externals)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(BUILD_STATIC_LIBS ON CACHE BOOL "" FORCE)
 
-
-#Glm
+#Glm - header only.
 set(GLM_TEST_ENABLE OFF CACHE BOOL "" FORCE)
 set(BUILD_STATIC_LIBS ON CACHE BOOL "" FORCE)
 add_subdirectory(Glm)
 
-target_include_directories(
-	glm_static
-    PUBLIC
-        Glm/glm
+target_include_directories(glm_static PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Glm>
+		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Glm>
 )
 
 #Spdlog
-add_library(
+SULFIUM_ADD_INTERNAL_STATIC_LIB(
 	Spdlog
-	STATIC
 	Spdlog/src/spdlog.cpp
 )
 
-target_include_directories(
-	Spdlog
-	PUBLIC
-		Spdlog/include
+target_include_directories(Spdlog PUBLIC
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Spdlog/include>
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/spdlog>
 )
 
-target_compile_definitions(
-	Spdlog
-	PUBLIC
-		SPDLOG_COMPILED_LIB
+target_compile_definitions(Spdlog PUBLIC
+	SPDLOG_COMPILED_LIB
 )
+
+if(SULFIUM_INSTALL)
+SULFIUM_INSTALL_HEADERS(
+	Spdlog
+	${CMAKE_CURRENT_SOURCE_DIR}/Spdlog/include/
+)
+endif()
 
 #TinyGltf.
 set(TINYGLTF_BUILD_LOADER_EXAMPLE OFF CACHE BOOL "" FORCE)
 set(TINYGLTF_INSTALL OFF CACHE BOOL "" FORCE)
+set(TINY_GLTF_HEADER_ONLY OFF CACHE BOOL "" FORCE)
 add_subdirectory(Tinygltf)
 
-#Imgui-dependency.
-set(IMGUI_SOURCES
-    Imgui/imgui.cpp
-    Imgui/imgui_demo.cpp
-    Imgui/imgui_draw.cpp
-    Imgui/imgui_widgets.cpp
+if(SULFIUM_INSTALL)
+#Don't use sulfium utility, since that copies a directory.
+INSTALL ( 
+	FILES
+		${CMAKE_CURRENT_SOURCE_DIR}/Tinygltf/json.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/Tinygltf/stb_image.h
+		${CMAKE_CURRENT_SOURCE_DIR}/Tinygltf/stb_image_write.h
+		${CMAKE_CURRENT_SOURCE_DIR}/Tinygltf/tiny_gltf.h
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Tinygltf
 )
+endif()
 
-set(IMGUI_HEADERS
-    Imgui/imconfig.h
-    Imgui/imgui.h
-    Imgui/imgui_internal.h
-    Imgui/imstb_rectpack.h
-    Imgui/imstb_textedit.h
-    Imgui/imstb_truetype.h
-)
-
-add_library(Imgui
-    STATIC
-    ${IMGUI_SOURCES}
-    ${IMGUI_HEADERS}
-)
-
-#Imguizmo
-set(IMGUIZMO_SOURCES
-   Imguizmo/GraphEditor.cpp
-   Imguizmo/ImCurveEdit.cpp
-   Imguizmo/ImGradient.cpp
-   Imguizmo/Imguizmo.cpp
-   Imguizmo/ImSequencer.cpp
-)
-
-set(IMGUIZMO_HEADERS
-   Imguizmo/GraphEditor.h
-   Imguizmo/ImCurveEdit.h
-   Imguizmo/ImGradient.h
-   Imguizmo/Imguizmo.h
-   Imguizmo/ImSequencer.h
-   Imguizmo/ImZoomSlider.h
-)
-
-add_library(Imguizmo
-    STATIC
-    ${IMGUIZMO_SOURCES}
-    ${IMGUIZMO_HEADERS}
-)
-
-target_include_directories(Imguizmo PUBLIC
-	${CMAKE_SOURCE_DIR}/Externals/Imgui
-)
+#Imgui-dependency & Imguizmo, due to object library siyrce files not being able to link themselves into another project.
+#set(IMGUI_SOURCES
+#    Imgui/imgui.cpp
+#    Imgui/imgui_demo.cpp
+#    Imgui/imgui_draw.cpp
+#    Imgui/imgui_widgets.cpp
+#)
+#
+#set(IMGUI_HEADERS
+#    Imgui/imconfig.h
+#    Imgui/imgui.h
+#    Imgui/imgui_internal.h
+#    Imgui/imstb_rectpack.h
+#    Imgui/imstb_textedit.h
+#    Imgui/imstb_truetype.h
+#)
+#
+#set(IMGUIZMO_SOURCES
+#   Imguizmo/GraphEditor.cpp
+#   Imguizmo/ImCurveEdit.cpp
+#   Imguizmo/ImGradient.cpp
+#   Imguizmo/Imguizmo.cpp
+#   Imguizmo/ImSequencer.cpp
+#)
+#
+#set(IMGUIZMO_HEADERS
+#   Imguizmo/GraphEditor.h
+#   Imguizmo/ImCurveEdit.h
+#   Imguizmo/ImGradient.h
+#   Imguizmo/Imguizmo.h
+#   Imguizmo/ImSequencer.h
+#   Imguizmo/ImZoomSlider.h
+#)
+#
+#SULFIUM_ADD_INTERNAL_STATIC_LIB(Imgui
+#    ${IMGUI_SOURCES}
+#    ${IMGUI_HEADERS}
+#	${IMGUIZMO_SOURCES}
+#	${IMGUIZMO_HEADERS}
+#)
+#
+#target_include_directories(Imgui PUBLIC
+#	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Imgui>
+#	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Imguizmo>
+#	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIRS}/Imgui>
+#	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIRS}>
+#)
+#
+#if(SULFIUM_INSTALL)
+##Don't use sulfium utility, since that copies a directory.
+#INSTALL (
+#	FILES
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imgui/imconfig.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imgui/imgui.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imgui/imgui_internal.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imgui/imstb_rectpack.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imgui/imstb_textedit.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imgui/imstb_truetype.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imguizmo/GraphEditor.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imguizmo/ImCurveEdit.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imguizmo/ImGradient.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imguizmo/Imguizmo.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imguizmo/ImSequencer.h
+#		${CMAKE_CURRENT_SOURCE_DIR}/Imguizmo/ImZoomSlider.h
+#	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Imgui
+#)
+#endif()
 
 #Adding the targets to a "Modules" filter in the cmake view and build structure.
 set_target_properties(
 	glm_static
+	uninstall
+	PROPERTIES
+		FOLDER 
+			Externals/glm
+)
+
+set_target_properties(
 	Spdlog
 	tinygltf
-	Imgui
-	Imguizmo
-	uninstall
+	#Imgui
 	PROPERTIES
 		FOLDER 
 			Externals

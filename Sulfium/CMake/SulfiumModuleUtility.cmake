@@ -6,9 +6,13 @@
 # - sulfium_install_targets
 # - sulfium_install_headers
 # - sulfium_add_internal_shared_lib
+# - sulfium_add_internal_object_lib
+# - sulfium_add_internal_module_lib
 
 #MODULE/LIBRARY UTILITY.
 ##############################################################################################################
+
+cmake_minimum_required(VERSION 3.16)
 
 #Adding a third party library to the build and install tree.
 function(sulfium_add_third_party_lib NAME)
@@ -62,6 +66,19 @@ function(sulfium_add_internal_static_lib NAME)
 
 endfunction()
 
+#Adding a module library to the project.
+function(sulfium_add_internal_module_lib NAME)
+    add_library(
+        ${NAME} 
+        MODULE
+        ${ARGN}
+    )
+
+    if (MSVC)
+        set_target_properties(${NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
+endfunction()
+
 #Adding a shared library to the project.
 function(sulfium_add_internal_shared_lib NAME)
     add_library(
@@ -72,6 +89,23 @@ function(sulfium_add_internal_shared_lib NAME)
 
     if (MSVC)
         set_target_properties(${NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    endif()
+endfunction()
+
+#Adding a shared library to the project.
+function(sulfium_add_internal_object_lib NAME)
+    add_library(
+        ${NAME} 
+        OBJECT
+        ${ARGN}
+    )
+
+    if (MSVC)
+        set_target_properties(${NAME} PROPERTIES
+            LINK_FLAGS "/WHOLEARCHIVE"
+	        POSITION_INDEPENDENT_CODE ON
+            WINDOWS_EXPORT_ALL_SYMBOLS ON
+        )
     endif()
 endfunction()
 
@@ -156,7 +190,13 @@ function(sulfium_install_headers NAME HEADER_DIR)
                 PATTERN *.h
                 PATTERN *.inl
                 PATTERN *.hpp
-                PATTERN *.ih    
+                PATTERN *.ih
+
+                #GLM
+                PATTERN "cmake" EXCLUDE
+                PATTERN "doc" EXCLUDE
+                PATTERN "test" EXCLUDE
+                PATTERN "util" EXCLUDE
         )
     endif(SULFIUM_INSTALL)
 endfunction()
