@@ -17,3 +17,6 @@
 	path = Sulfium/Externals/Imgui
 	url = https://github.com/ocornut/imgui
 	branch = docking
+[submodule "Sulfium/Externals/Signals/signals"]
+	path = Sulfium/Externals/Signals/signals
+	url = https://github.com/jpvanoosten/signals.git
