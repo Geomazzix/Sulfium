@@ -62,12 +62,12 @@ DESTINATION
 #Package the whole project into a single export config.
 set(SULFIUM_EXPORT_TARGETS
 	Sulfium
+	Core
+	glm
+	tinygltf
 	ThreadSystem
 	ApplicationCore
 	RenderCore
-	glm
-	Spdlog
-	tinygltf
 )
 
 if(BUILD_VULKAN_BACKEND)
@@ -76,6 +76,11 @@ endif()
 
 if(USE_SULFIUM_GLTF)
 list(APPEND SULFIUM_EXPORT_TARGETS Gltf)
+endif()
+
+if(WIN32 OR APPLE OR UNIX)
+list(APPEND SULFIUM_EXPORT_TARGETS Signals)
+list(APPEND SULFIUM_EXPORT_TARGETS Spdlog)
 endif()
 
 sulfium_install_and_export_targets(

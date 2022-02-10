@@ -28,8 +28,8 @@ target_include_directories(VulkanRenderer PUBLIC
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/RenderCore>
 )
 
-target_link_libraries(
-	glm_static
+target_link_libraries(VulkanRenderer PUBLIC
+	Core
 )
 
 #Enables DLL symbol export.

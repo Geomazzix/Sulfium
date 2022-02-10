@@ -19,6 +19,10 @@ target_include_directories(ThreadSystem PUBLIC
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ThreadSystem>
 )
 
+target_link_libraries(ThreadSystem PUBLIC
+	Core
+)
+
 set_target_properties(ThreadSystem PROPERTIES
 	FOLDER 
 		Modules

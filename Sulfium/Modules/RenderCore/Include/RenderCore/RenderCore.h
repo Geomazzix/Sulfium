@@ -1,4 +1,5 @@
 #pragma once
+#include <Core/Engine.h>
 #include "RenderCore/GraphicsAPILoader.h"
 
 namespace SFM
@@ -25,11 +26,13 @@ namespace SFM
 		RenderCore();
 		~RenderCore() = default;
 
-		void Initialize(EGraphicsAPI api);
+		void Initialize(std::weak_ptr<Engine> engine, EGraphicsAPI api);
 		void Terminate();
 	
 	private:
 		void LoadGraphicsAPI(EGraphicsAPI api);
+
+		std::weak_ptr<Engine> m_engine;
 
 		GraphicsAPILoader m_graphicsAPILoader;
 		IGraphicsAPI* m_graphicsAPI;

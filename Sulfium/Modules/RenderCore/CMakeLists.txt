@@ -27,6 +27,10 @@ target_compile_definitions(RenderCore PRIVATE
 	$<INSTALL_INTERFACE:SULFIUM_DLL_DIRECTORY="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/">
 )
 
+target_link_libraries(RenderCore PUBLIC
+	Core
+)
+
 if(${BUILD_VULKAN_BACKEND})
 target_compile_definitions(RenderCore PRIVATE
 	VULKAN_BACKEND

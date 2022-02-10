@@ -1,26 +1,16 @@
 #include "ThreadSystem/ThreadSystem.h"
-#include <cstdio>
+#include "Core/Printer/Printer.h"
 
 namespace SFM
 {
-	ThreadSystem::ThreadSystem()
-	{
-
-	}
-
-	ThreadSystem::~ThreadSystem()
-	{
-
-	}
-
 	void ThreadSystem::Initialize()
 	{
-		printf("Successfully initialized the thread system!\n");
+		SFM_LOGINFO("Successfully initialized the thread system!");
 	}
 
 	void ThreadSystem::Terminate()
 	{
-		printf("Successfully terminated the thread system!\n");
+		SFM_LOGINFO("Successfully terminated the thread system!");
 
 	}
 }

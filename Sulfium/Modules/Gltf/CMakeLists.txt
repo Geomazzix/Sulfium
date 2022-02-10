@@ -28,6 +28,7 @@ target_compile_definitions(Gltf PRIVATE
 
 target_link_libraries(Gltf PRIVATE
 	tinygltf
+	Core
 )
 
 set_target_properties(Gltf PROPERTIES

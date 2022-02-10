@@ -5,6 +5,7 @@ set(MODULES_DIRECTORY ${CMAKE_SOURCE_DIRECTORY}/Modules)
 add_subdirectory(ThreadSystem)
 add_subdirectory(ApplicationCore)
 add_subdirectory(RenderCore)
+add_subdirectory(Core)
 
 if(BUILD_VULKAN_BACKEND)
 add_subdirectory(VulkanRenderer)

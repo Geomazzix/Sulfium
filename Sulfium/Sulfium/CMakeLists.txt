@@ -26,10 +26,14 @@ target_include_directories(Sulfium PUBLIC
 
 #All depencies connected to Sulfium according to https://lucid.app/lucidchart/0b97d091-8d77-4b75-a080-4d96d210966b/edit?invitationId=inv_cf056a50-91a2-4e0f-be82-1df210fe7c47
 target_link_libraries(Sulfium PUBLIC
+	Core
 	ThreadSystem
 	ApplicationCore
 	RenderCore
-	Spdlog
+)
+
+target_compile_definitions(Sulfium INTERFACE
+	cxx_std_17 #enforce cxx17 on any target that wants to use the library, since signals requires this.
 )
 
 #Creating the PCH

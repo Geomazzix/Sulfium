@@ -197,6 +197,9 @@ function(sulfium_install_headers NAME HEADER_DIR)
                 PATTERN "doc" EXCLUDE
                 PATTERN "test" EXCLUDE
                 PATTERN "util" EXCLUDE
+
+                #Pch shouldn't be copied over!
+                PATTERN "Pch.h" EXCLUDE
         )
     endif(SULFIUM_INSTALL)
 endfunction()

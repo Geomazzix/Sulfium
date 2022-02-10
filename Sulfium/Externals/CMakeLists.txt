@@ -13,10 +13,23 @@ target_include_directories(glm_static PUBLIC
 		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Glm>
 )
 
+if(SULFIUM_INSTALL)
+SULFIUM_INSTALL_HEADERS(
+	Glm
+	${CMAKE_CURRENT_SOURCE_DIR}/Glm/
+)
+endif()
+
 #Spdlog
 SULFIUM_ADD_INTERNAL_STATIC_LIB(
 	Spdlog
+	Spdlog/src/async.cpp
+	Spdlog/src/cfg.cpp
+	Spdlog/src/color_sinks.cpp
+	Spdlog/src/file_sinks.cpp
+	Spdlog/src/fmt.cpp
 	Spdlog/src/spdlog.cpp
+	Spdlog/src/stdout_sinks.cpp
 )
 
 target_include_directories(Spdlog PUBLIC
@@ -50,6 +63,27 @@ INSTALL (
 		${CMAKE_CURRENT_SOURCE_DIR}/Tinygltf/stb_image_write.h
 		${CMAKE_CURRENT_SOURCE_DIR}/Tinygltf/tiny_gltf.h
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Tinygltf
+)
+endif()
+
+#Signal library
+add_library(Signals INTERFACE 
+	${CMAKE_CURRENT_SOURCE_DIR}/Signals/optional.hpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Signals/signals.hpp
+)
+
+target_include_directories(Signals INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Signals>
+)
+
+if(SULFIUM_INSTALL)
+#Don't use sulfium utility, since that copies a directory.
+INSTALL ( 
+	FILES
+		${CMAKE_CURRENT_SOURCE_DIR}/Signals/optional.hpp
+		${CMAKE_CURRENT_SOURCE_DIR}/Signals/signals.hpp
+	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Signals
 )
 endif()
 
@@ -134,6 +168,7 @@ set_target_properties(
 	Spdlog
 	tinygltf
 	#Imgui
+	Signals
 	PROPERTIES
 		FOLDER 
 			Externals

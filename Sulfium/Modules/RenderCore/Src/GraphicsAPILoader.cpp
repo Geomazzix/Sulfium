@@ -1,4 +1,5 @@
 #include "RenderCore/GraphicsAPILoader.h"
+#include "Core/Printer/Printer.h"
 
 namespace SFM
 {
@@ -10,7 +11,7 @@ namespace SFM
 		auto& it = m_modules.find(moduleName);
 		if (it != m_modules.end())
 		{
-			printf("WARNING: Trying to load module that is already loaded in memory and will therefore be skipped: %s.\n", moduleName.c_str());
+			SFM_LOGCRITICAL("WARNING: Trying to load module that is already loaded in memory and will therefore be skipped: %s.", moduleName.c_str());
 			return m_modules[moduleName];
 		}
 
@@ -20,7 +21,7 @@ namespace SFM
 		createModuleFunction = (CreateModule)GetSymbol(graphicsAPIModule.Process, "CreateModule");
 		if (createModuleFunction == nullptr)
 		{
-			printf("Failed to retrieve the mandatory 'CreateModule' method in the library: %s\n", moduleName.c_str());
+			SFM_LOGCRITICAL("Failed to retrieve the mandatory 'CreateModule' method in the library: %s.", moduleName.c_str());
 		}
 		else
 		{
@@ -36,7 +37,7 @@ namespace SFM
 		auto& it = m_modules.find(moduleName);
 		if (it == m_modules.end())
 		{
-			printf("Failed: Failed to destroy module, presence of module '%s' not found.\n", moduleName.c_str());
+			SFM_LOGERROR("Failed: Failed to destroy module, presence of module '%s' not found.", moduleName.c_str());
 			return;
 		}
 
@@ -58,7 +59,7 @@ namespace SFM
 			char errstr[1024] = "FormatMessage failed (unknown error code?)";
 			if (GetLastErrorString(errstr, sizeof(errstr)))
 			{
-				printf("Failed to load %s: %s\tTrying local DLL\n", modulePath.c_str(), errstr);
+				SFM_LOGCRITICAL("Failed to load %s: %s\tTrying local DLL", modulePath.c_str(), errstr);
 			}
 
 			//See if the dll is perhaps in the current folder.
@@ -66,7 +67,7 @@ namespace SFM
 			if (!process)
 			{
 				GetLastErrorString(errstr, sizeof(errstr));
-				printf("Unable to open %s: %s", moduleName.c_str(), errstr);
+				SFM_LOGCRITICAL("Unable to open %s: %s", moduleName.c_str(), errstr);
 			}
 		}
 #endif

@@ -8,13 +8,10 @@ namespace SFM
 	class ThreadSystem
 	{
 	public:
-		ThreadSystem();
-		~ThreadSystem();
+		ThreadSystem() = default;
+		~ThreadSystem() = default;
 
 		void Initialize();
 		void Terminate();
-
-	private:
-
 	};
 }

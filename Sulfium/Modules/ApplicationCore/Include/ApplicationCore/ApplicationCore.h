@@ -1,4 +1,8 @@
 #pragma once
+#include <Core/Engine.h>
+
+#include "ApplicationCore/Window/Window.h"
+#include "ApplicationCore/Input/Input.h"
 
 namespace SFM
 {
@@ -9,12 +13,19 @@ namespace SFM
 	{
 	public:
 		ApplicationCore();
-		~ApplicationCore();
+		~ApplicationCore() = default;
 
-		void Initialize();
+		void Initialize(std::weak_ptr<Engine> engine);
 		void Terminate();
 
-	private:
+		void Update();
 
+		std::weak_ptr<Input> GetInput();
+		Window& GetWindow();
+
+	private:
+		std::shared_ptr<Input> m_input;
+		std::weak_ptr<Engine> m_engine;
+		Window m_window;
 	};
 }
