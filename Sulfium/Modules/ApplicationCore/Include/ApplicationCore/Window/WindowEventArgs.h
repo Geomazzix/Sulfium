@@ -4,42 +4,41 @@
 namespace SFM
 {
 	/// <summary>
-	/// Changes that can impact the application on the outside.
+	/// The resize event args are used for the frame buffer resize and go hand in hand with the window pause event args.
 	/// </summary>
-	enum class EWindowRenderState
-	{
-		Minimized,
-		Maximized,
-		Terminating
-	};
-
-	class ResizeEventArgs : public EventArgs
+	class WindowResizeEventArgs : public EventArgs
 	{
 	public:
-		typedef EventArgs base;
-		ResizeEventArgs(int width, int height):
+		WindowResizeEventArgs(int width, int height):
 			Width(width),
 			Height(height)
 		{}
 
-		// The new width of the window
 		int Width;
-		// The new height of the window.
 		int Height;
 	};
-
-	class WindowStateEventArgs : public EventArgs
+	
+	/// <summary>
+	/// The termination event args are used when the window wants to get terminated, meaning the application also needs to terminate.
+	/// </summary>
+	struct WindowTerminationEventArgs : public EventArgs
 	{
-	public:
-		typedef EventArgs base;
-		WindowStateEventArgs(EWindowRenderState state, int frameBufferWidth, int frameBufferHeight) :
-			State(state), 
-			FrameBufferWidth(frameBufferWidth), 
-			FrameBufferHeight(frameBufferHeight)
+		WindowTerminationEventArgs(bool doesTerminate) :
+			DoesTerminate(doesTerminate) 
 		{}
 
-		EWindowRenderState State;
-		int FrameBufferWidth;
-		int FrameBufferHeight;
+		bool DoesTerminate;
+	};
+
+	/// <summary>
+	/// Used during the window resize in order to make sure that the renderer can keep up.
+	/// </summary>
+	struct WindowPauseEventArgs : public EventArgs
+	{
+		WindowPauseEventArgs(bool doesPause) :
+			DoesPause(doesPause)
+		{}
+
+		bool DoesPause;
 	};
 }

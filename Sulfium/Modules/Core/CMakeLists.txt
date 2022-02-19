@@ -4,9 +4,8 @@ set(HEADER_FILES
 	Include/Core/Engine.h
 	Include/Core/Printer/Printer.h
 
-	Include/Core/Events/Delegate.h
-	Include/Core/Events/EventArgs.h
 	Include/Core/Events/EventSystem.h
+	Include/Core/Events/EventArgs.h
 )
 
 set(SOURCE_FILES
@@ -26,16 +25,18 @@ target_include_directories(Core PUBLIC
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Core>
 )
 
-if(WIN32 OR APPLE OR UNIX)
 target_link_libraries(Core PUBLIC
 	Spdlog
-	Signals
+	Entt
 )
-endif()
 
 set_target_properties(Core PROPERTIES
 	FOLDER 
 		Modules
+)
+
+target_compile_definitions(Core PUBLIC
+	cxx_std_17 #enforce cxx17 on any target that wants to use the library, since signals requires this.
 )
 
 target_precompile_headers(Core PUBLIC

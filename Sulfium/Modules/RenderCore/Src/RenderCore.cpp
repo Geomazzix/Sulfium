@@ -65,6 +65,9 @@ namespace SFM
 		if (m_activeGraphicsAPI != EGraphicsAPI::UNIDENTIFIED)
 		{
 			m_graphicsAPI->Initialize();
+		
+			//Since the graphics APIs don't have access to the engine: create the events here.
+			m_engine.lock()->GetEventSystem().GetEventDispatcher("Window").sink<SFM::WindowResizeEventArgs>().connect<&IGraphicsAPI::OnFrameBufferResize>(m_graphicsAPI);
 		}
 	}
 }

@@ -23,8 +23,8 @@ namespace SFM
 		
 		m_input = input;
 		m_engine = engine;
-		m_engine.lock()->GetEventMessenger().AddMessenger<SFM::ResizeEventArgs&>("OnWindowResize");
-		
+		//m_engine.lock()->GetEventMessenger().AddMessenger<SFM::ResizeEventArgs&>("OnWindowResize");
+
 		m_widthInPx = width;
 		m_heightInPx = height;
 
@@ -167,7 +167,8 @@ namespace SFM
 
 	LRESULT CALLBACK Win32Window::LocalWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		EventMessenger& messenger = m_engine.lock()->GetEventMessenger();
+		//All events will get triggered, instead of enqueued, due to multithreaded OS event polling.
+		EventDispatcher& dispatcher = m_engine.lock()->GetEventSystem().GetEventDispatcher("Window");
 
 		switch (message)
 		{
@@ -298,11 +299,11 @@ namespace SFM
 		{
 			if (LOWORD(wParam) == WA_INACTIVE)
 			{
-				messenger.EvokeMessenger("OnAppPause");
+				dispatcher.trigger<SFM::WindowPauseEventArgs>(true);
 			}
 			else
 			{
-				messenger.EvokeMessenger("OnAppResume");
+				dispatcher.trigger<SFM::WindowPauseEventArgs>(false);
 			}
 			return 0;
 		}
@@ -312,47 +313,47 @@ namespace SFM
 			m_widthInPx = LOWORD(lParam);
 			m_heightInPx = HIWORD(lParam);
 
-			ResizeEventArgs resizeArgs(m_widthInPx, m_heightInPx);
+			WindowResizeEventArgs resizeArgs(m_widthInPx, m_heightInPx);
 
 			if (wParam == SIZE_MINIMIZED)
 			{
-				messenger.EvokeMessenger("OnAppPause");
+				dispatcher.trigger<SFM::WindowPauseEventArgs>(false);
 				m_minimized = true;
 				m_maximized = false;
 			}
 			else if (wParam == SIZE_MAXIMIZED)
 			{
-				messenger.EvokeMessenger("OnAppResume");
+				dispatcher.trigger<SFM::WindowPauseEventArgs>(true);
 				m_minimized = false;
 				m_maximized = true;
-				messenger.EvokeMessenger("OnWindowResize", resizeArgs);
+				dispatcher.trigger<SFM::WindowResizeEventArgs>(resizeArgs);
 			}
 			else if (wParam == SIZE_RESTORED)
 			{
 				if (m_minimized) // Restoring from minimized state?
 				{
-					messenger.EvokeMessenger("OnAppResume");
+					dispatcher.trigger<SFM::WindowPauseEventArgs>(true);
 					m_minimized = false;
-					messenger.EvokeMessenger("OnWindowResize", resizeArgs);
+					dispatcher.trigger<SFM::WindowResizeEventArgs>(resizeArgs);
 				}
 				else if (m_maximized) // Restoring from maximized state?
 				{
-					messenger.EvokeMessenger("OnAppResume");
+					dispatcher.trigger<SFM::WindowPauseEventArgs>(true);
 					m_maximized = false;
-					messenger.EvokeMessenger("OnWindowResize", resizeArgs);
+					dispatcher.trigger<SFM::WindowResizeEventArgs>(resizeArgs);
 				}
 				else if (!m_resizing)
 				{
-					messenger.EvokeMessenger("OnWindowResize", resizeArgs);
+					dispatcher.trigger<SFM::WindowResizeEventArgs>(resizeArgs);
 				}
 			}
 			return 0;
 		}
 
-		// WM_EXITSIZEMOVE is sent when the user grabs the resize bars.
+		// WM_ENTERSIZEMOVE is sent when the user grabs the resize bars.
 		case WM_ENTERSIZEMOVE:
 		{
-			messenger.EvokeMessenger("OnAppPause");
+			dispatcher.trigger<SFM::WindowPauseEventArgs>(true);
 			m_resizing = true;
 			return 0;
 		}
@@ -361,10 +362,10 @@ namespace SFM
 		// Here we reset everything based on the new window dimensions.
 		case WM_EXITSIZEMOVE:
 		{
-			messenger.EvokeMessenger("OnAppResume");
+			dispatcher.trigger<SFM::WindowPauseEventArgs>(false);
 			m_resizing = false;
-			ResizeEventArgs resizeArgs(m_widthInPx, m_heightInPx);
-			messenger.EvokeMessenger("OnWindowResize", resizeArgs);
+			WindowResizeEventArgs resizeArgs(m_widthInPx, m_heightInPx);
+			dispatcher.trigger<SFM::WindowResizeEventArgs>(resizeArgs);
 			return 0;
 		}
 		

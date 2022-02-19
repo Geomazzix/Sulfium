@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderCore/IGraphicsAPI.h"
+#include "WindowEventArgs.h"
 
 namespace SFM
 {
@@ -14,5 +15,10 @@ namespace SFM
 
 		void Initialize() override;
 		void Terminate() override;
+
+		void OnFrameBufferResize(const WindowResizeEventArgs& e) override;
+
+	private:
+		std::weak_ptr<Engine> m_engine;
 	};
 }

@@ -31,8 +31,6 @@ namespace SFM
 		Printer();
 		~Printer() = default;
 
-		static Printer& Get();
-
 		void Initialize(const std::string& filepath, eLogLevel logLevel, eLogLevel fileLogLevel);
 		void Terminate();
 
@@ -183,11 +181,10 @@ namespace SFM
 		//TODO: Add multiple platform specific logging methods.
 		return message;
 	}
-
-//Helper macros that can be used in the code base.
-#define SFM_LOGDebug	Printer::Get().LogDebug
-#define SFM_LOGINFO		Printer::Get().LogInfo
-#define SFM_LOGWARNING	Printer::Get().LogWarning
-#define SFM_LOGERROR	Printer::Get().LogError
-#define SFM_LOGCRITICAL Printer::Get().LogCritical
 }
+
+#define SFM_LOGDEBUG	spdlog::debug
+#define SFM_LOGINFO		spdlog::info
+#define SFM_LOGWARNING	spdlog::warn
+#define SFM_LOGERROR	spdlog::error
+#define SFM_LOGCRITICAL spdlog::critical

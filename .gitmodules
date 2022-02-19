@@ -17,3 +17,6 @@
 	path = Sulfium/Externals/Imgui
 	url = https://github.com/ocornut/imgui
 	branch = docking
+[submodule "Sulfium/Externals/entt"]
+	path = Sulfium/Externals/entt
+	url = git@github.com:skypjack/entt.git

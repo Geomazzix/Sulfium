@@ -12,10 +12,6 @@ namespace SFM
 	{
 		m_engine = engine;
 
-		EventMessenger& messenger = m_engine.lock()->GetEventMessenger();
-		messenger.AddMessenger("OnAppPause");
-		messenger.AddMessenger("OnAppResume");
-
 		m_input = std::make_shared<Input>();
 		m_input->Initialize(m_engine);
 
@@ -37,7 +33,7 @@ namespace SFM
 	
 		if (m_window.DoesWindowClose())
 		{
-			m_engine.lock()->GetEventMessenger().EvokeMessenger("OnAppClose");
+			m_engine.lock()->GetEventSystem().GetEventDispatcher("Window").enqueue<SFM::WindowTerminationEventArgs>(false);
 		}
 	}
 

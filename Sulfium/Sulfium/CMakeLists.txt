@@ -45,3 +45,8 @@ sulfium_install_headers(
 	Sulfium
 	${CMAKE_CURRENT_SOURCE_DIR}/Include
 )
+
+set_target_properties(Sulfium PROPERTIES
+	SOVERSION ${SULFIUM_VERSION_MAJOR}
+	VERSION ${SULFIUM_VERSION}
+)

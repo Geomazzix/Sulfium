@@ -1,5 +1,6 @@
 #pragma once
-#include <string>
+#include "Core/Engine.h"
+#include "WindowEventArgs.h"
 
 namespace SFM
 {
@@ -14,6 +15,8 @@ namespace SFM
 
 		virtual void Initialize() = 0;
 		virtual void Terminate() = 0;
+
+		virtual void OnFrameBufferResize(const SFM::WindowResizeEventArgs& e) = 0;
 
 		//#TODO: Add graphics API methods that all graphics APIs should be able to adhere to.
 	

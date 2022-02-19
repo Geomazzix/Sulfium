@@ -62,6 +62,7 @@ DESTINATION
 #Package the whole project into a single export config.
 set(SULFIUM_EXPORT_TARGETS
 	Sulfium
+	Entt
 	Core
 	glm
 	tinygltf
@@ -79,7 +80,6 @@ list(APPEND SULFIUM_EXPORT_TARGETS Gltf)
 endif()
 
 if(WIN32 OR APPLE OR UNIX)
-list(APPEND SULFIUM_EXPORT_TARGETS Signals)
 list(APPEND SULFIUM_EXPORT_TARGETS Spdlog)
 endif()
 

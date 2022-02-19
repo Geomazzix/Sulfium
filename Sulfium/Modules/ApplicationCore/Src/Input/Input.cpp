@@ -18,7 +18,6 @@ namespace SFM
 	void Input::Initialize(std::weak_ptr<Engine> engine)
 	{
 		m_engine = engine;
-		m_engine.lock()->GetEventMessenger().AddMessenger<MouseWheelEventArgs&>("OnMouseScrollWheelChanged");
 	}
 
 	void Input::Terminate()
@@ -105,6 +104,7 @@ namespace SFM
 
 	void Input::OnMouseScrollWheelChanged(MouseWheelEventArgs& e)
 	{
-		m_engine.lock()->GetEventMessenger().EvokeMessenger("OnMouseScrollWheelChanged", e);
+		//#TODO: Implement scroll input!
 	}
+
 }

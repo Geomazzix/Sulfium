@@ -1,19 +1,22 @@
 #include "VulkanRenderer/VulkanModule.h"
 #include "RenderCore/DLLDefines.h"
-#include <Core/Printer/Printer.h>
-#include <cstdio>
 
 namespace SFM
 {
 	void VulkanModule::Initialize()
 	{
-		printf("Vulkan successfully initialized!\n");
+		SFM_LOGINFO("Vulkan successfully initialized!");
 		m_GraphicsAPI_Name = "VulkanRenderer";
 	}
 
 	void VulkanModule::Terminate()
 	{
-		printf("Vulkan successfully terminated!\n");
+		SFM_LOGINFO("Vulkan successfully terminated!");
+	}
+
+	void VulkanModule::OnFrameBufferResize(const WindowResizeEventArgs& e)
+	{
+		SFM_LOGINFO("FRAMEBUFFER CHANGE DETECTED!");
 	}
 }
 

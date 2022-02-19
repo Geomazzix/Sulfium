@@ -4,16 +4,21 @@ namespace SFM
 {
 	void Engine::Initialize()
 	{
-		Printer::Get().Initialize("Logs/SulfiumLogs.txt", eLogLevel::Info, eLogLevel::Info);
+		m_printer.Initialize("Logs/SulfiumLogs.txt", eLogLevel::Info, eLogLevel::Info);
 	}
 
 	void Engine::Terminate()
 	{
-		Printer::Get().Terminate();
+		m_printer.Terminate();
 	}
 
-	EventMessenger& Engine::GetEventMessenger()
+	void Engine::Update()
 	{
-		return m_eventMessenger;
+		m_eventSystem.DispatchEnqueuedEvents();
+	}
+
+	SFM::EventSystem& Engine::GetEventSystem()
+	{
+		return m_eventSystem;
 	}
 }

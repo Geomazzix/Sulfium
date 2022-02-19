@@ -1,8 +1,8 @@
 #pragma once
-#include <Core/Engine.h>
 #include <ThreadSystem/ThreadSystem.h>
 #include <RenderCore/RenderCore.h>
 #include <ApplicationCore/ApplicationCore.h>
+#include <Core/Engine.h>
 
 namespace SFM
 {
@@ -18,21 +18,22 @@ namespace SFM
 		Sulfium(const Sulfium& rhs) = delete;
 		Sulfium(Sulfium&& rhs) = delete;
 
+		Sulfium& Get();
+
 		void Initialize();
 		void Terminate();
 
-		void TriggerEngineLoopEnd();
-
-		SFM::EventMessenger& GetEventMessenger();
-		std::weak_ptr<Input> GetInput();
+		void TriggerEngineLoopEnd(const SFM::WindowTerminationEventArgs& e);
+		void OnWindowPause(const SFM::WindowPauseEventArgs& e);
 
 	private:
 		void EngineLoop();
 
-		bool m_engineRunning;
-
 		std::shared_ptr<Engine> m_engine;
-		
+
+		bool m_sulfiumRunning;
+		bool m_sulfiumPaused;
+
 		ApplicationCore m_appCore;
 		RenderCore m_renderCore;
 		ThreadSystem m_threadSystem;

@@ -25,8 +25,10 @@ function(sulfium_add_third_party_lib NAME)
         )
 
         if (MSVC)
-            set_target_properties(${NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-        endif()
+            set_target_properties(${NAME} PROPERTIES 
+                WINDOWS_EXPORT_ALL_SYMBOLS ON
+            )      
+            endif()
     else() #Else make it a static library
         add_library(
             ${NAME} 
@@ -35,7 +37,9 @@ function(sulfium_add_third_party_lib NAME)
         )
 
         if (MSVC)
-            set_target_properties(${NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+            set_target_properties(${NAME} PROPERTIES 
+                WINDOWS_EXPORT_ALL_SYMBOLS OFF
+            )
         endif()
     endif()
 

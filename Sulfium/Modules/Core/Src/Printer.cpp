@@ -16,12 +16,6 @@ namespace SFM
 		m_fileLogLevel(eLogLevel::Info)
 	{}
 
-	Printer& Printer::Get() 
-	{
-		static Printer instance;
-		return instance;
-	}
-
 	void Printer::Initialize(const std::string& filepath, eLogLevel logLevel, eLogLevel fileLogLevel)
 	{
 		m_consoleLogLevel = logLevel;

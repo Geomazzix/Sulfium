@@ -3,8 +3,15 @@
 namespace SFM
 {
 	Sulfium::Sulfium() :
-		m_engineRunning(true)
+		m_sulfiumRunning(true),
+		m_sulfiumPaused(false)
 	{}
+
+	SFM::Sulfium& Sulfium::Get()
+	{
+		static Sulfium instance;
+		return instance;
+	}
 
 	void Sulfium::Initialize()
 	{
@@ -16,13 +23,14 @@ namespace SFM
 		SFM_LOGINFO("Starting up modules:");
 		SFM_LOGINFO("==========================================");
 
+		//Creating a way out, for when the application is requested to be closed.
+		EventDispatcher& dispatcher = m_engine->GetEventSystem().AddDispatcher("Window");
+		dispatcher.sink<SFM::WindowTerminationEventArgs>().connect<&Sulfium::TriggerEngineLoopEnd>(this);
+		dispatcher.sink<SFM::WindowPauseEventArgs>().connect<&Sulfium::OnWindowPause>(this);
+
 		m_threadSystem.Initialize();
 		m_appCore.Initialize(m_engine);
 		m_renderCore.Initialize(m_engine, EGraphicsAPI::VULKAN);
-
-		//Creating a way out, for when the application is requested to be closed.
-		m_engine->GetEventMessenger().AddMessenger("OnAppClose");
-		m_engine->GetEventMessenger().ConnectListener("OnAppClose", &Sulfium::TriggerEngineLoopEnd, this);
 
 		SFM_LOGINFO("==========================================");
 		SFM_LOGINFO("Modules have been loaded: Sulfium successfully initialized.");
@@ -48,26 +56,28 @@ namespace SFM
 		m_engine->Terminate();
 	}
 
-	void Sulfium::TriggerEngineLoopEnd()
+	void Sulfium::TriggerEngineLoopEnd(const SFM::WindowTerminationEventArgs& e)
 	{
-		m_engineRunning = false; //Make sure to exit the application loop.
+		m_sulfiumRunning = e.DoesTerminate;
 	}
 
-	SFM::EventMessenger& Sulfium::GetEventMessenger()
+	void Sulfium::OnWindowPause(const SFM::WindowPauseEventArgs& e)
 	{
-		return m_engine->GetEventMessenger();
-	}
-
-	std::weak_ptr<SFM::Input> Sulfium::GetInput()
-	{
-		return m_appCore.GetInput();
+		m_sulfiumPaused = e.DoesPause;
 	}
 
 	void Sulfium::EngineLoop()
 	{
-		while (m_engineRunning)
+		while (m_sulfiumRunning)
 		{
-			m_appCore.Update();
+			//Only render if the window is not being resized.
+			if (!m_sulfiumPaused)
+			{
+				//RenderSystem.Render?
+			}
+
+			m_appCore.Update();	//Poll windows events
+			m_engine->Update();	//Dispatch all queued events at the end of the frame.
 		}
 	}
 }

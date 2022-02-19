@@ -2,13 +2,48 @@
 
 namespace SFM
 {
-	void EventMessenger::RemoveMessenger(const std::string& key)
+	EventSystem::~EventSystem()
 	{
-		m_eventDispatchers.erase(key);
+		if (m_dispatchers.size() > 0)
+		{
+			ClearDispatchers();
+		}
 	}
 
-	bool EventMessenger::CheckIfExists(const std::string& key)
+	SFM::EventDispatcher& EventSystem::AddDispatcher(const std::string& dispatcher)
 	{
-		return (m_eventDispatchers.find(key) != m_eventDispatchers.end()) || (m_queuedEventDispatcher.find(key) != m_queuedEventDispatcher.end());
+		assert(m_dispatchers.find(dispatcher) == m_dispatchers.end());
+		m_dispatchers.emplace(dispatcher, EventDispatcher());
+		return m_dispatchers[dispatcher];
+	}
+
+	void EventSystem::RemoveDispatcher(const std::string& dispatcherId)
+	{
+		assert(m_dispatchers.find(dispatcherId) != m_dispatchers.end());
+		m_dispatchers[dispatcherId].clear();
+		m_dispatchers.erase(dispatcherId);
+	}
+
+	SFM::EventDispatcher& EventSystem::GetEventDispatcher(const std::string& dispatcher)
+	{
+		return m_dispatchers[dispatcher];
+	}
+
+	void EventSystem::ClearDispatchers()
+	{
+		for (auto& dispatcher : m_dispatchers)
+		{
+			dispatcher.second.clear();
+		}
+
+		m_dispatchers.clear();
+	}
+
+	void EventSystem::DispatchEnqueuedEvents()
+	{
+		for (auto& dispatcher : m_dispatchers)
+		{
+			dispatcher.second.update();
+		}
 	}
 }

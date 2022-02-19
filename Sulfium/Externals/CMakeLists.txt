@@ -20,26 +20,59 @@ SULFIUM_INSTALL_HEADERS(
 )
 endif()
 
-#Spdlog
-SULFIUM_ADD_INTERNAL_STATIC_LIB(
-	Spdlog
-	Spdlog/src/async.cpp
-	Spdlog/src/cfg.cpp
-	Spdlog/src/color_sinks.cpp
-	Spdlog/src/file_sinks.cpp
-	Spdlog/src/fmt.cpp
-	Spdlog/src/spdlog.cpp
-	Spdlog/src/stdout_sinks.cpp
+#Entt
+add_library(Entt INTERFACE)
+
+message(${CMAKE_CURRENT_SOURCE_DIR}/entt/src)
+
+target_include_directories(Entt INTERFACE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/entt/src>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/entt>
 )
 
-target_include_directories(Spdlog PUBLIC
+target_compile_features(Entt INTERFACE 
+	cxx_std_17
+)
+
+target_compile_definitions(Entt INTERFACE
+	ENTT_USE_ATOMIC			#https://github.com/skypjack/entt/wiki/Crash-Course:-configuration#entt_use_atomic
+	NOMINMAX				#https://github.com/skypjack/entt/wiki/Frequently-Asked-Questions#warning-C4003-the-min-the-max-and-the-macro
+)
+
+if(SULFIUM_INSTALL)
+SULFIUM_INSTALL_HEADERS(
+	Entt
+	${CMAKE_CURRENT_SOURCE_DIR}/entt/src/
+)
+endif()
+
+#Spdlog
+#file(GLOB_RECURSE SPDLOG_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/Spdlog/include/spdlog/*.h)
+#file(GLOB_RECURSE SPDLOG_INLINE_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/Spdlog/include/spdlog/*.inl)
+#
+#SULFIUM_ADD_INTERNAL_STATIC_LIB(
+#	Spdlog
+#	${SPDLOG_HEADERS}
+#	${SPDLOG_INLI1NE_HEADERS}
+#	Spdlog/src/async.cpp
+#	Spdlog/src/cfg.cpp
+#	Spdlog/src/color_sinks.cpp
+#	Spdlog/src/file_sinks.cpp
+#	Spdlog/src/fmt.cpp
+#	Spdlog/src/spdlog.cpp
+#	Spdlog/src/stdout_sinks.cpp
+#)
+
+add_library(Spdlog INTERFACE)
+
+target_include_directories(Spdlog INTERFACE
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Spdlog/include>
 	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/spdlog>
 )
 
-target_compile_definitions(Spdlog PUBLIC
-	SPDLOG_COMPILED_LIB
-)
+#target_compile_definitions(Spdlog PUBLIC
+#	SPDLOG_COMPILED_LIB
+#)
 
 if(SULFIUM_INSTALL)
 SULFIUM_INSTALL_HEADERS(
@@ -63,27 +96,6 @@ INSTALL (
 		${CMAKE_CURRENT_SOURCE_DIR}/Tinygltf/stb_image_write.h
 		${CMAKE_CURRENT_SOURCE_DIR}/Tinygltf/tiny_gltf.h
 	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Tinygltf
-)
-endif()
-
-#Signal library
-add_library(Signals INTERFACE 
-	${CMAKE_CURRENT_SOURCE_DIR}/Signals/optional.hpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Signals/signals.hpp
-)
-
-target_include_directories(Signals INTERFACE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Signals>
-)
-
-if(SULFIUM_INSTALL)
-#Don't use sulfium utility, since that copies a directory.
-INSTALL ( 
-	FILES
-		${CMAKE_CURRENT_SOURCE_DIR}/Signals/optional.hpp
-		${CMAKE_CURRENT_SOURCE_DIR}/Signals/signals.hpp
-	DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/Signals
 )
 endif()
 
@@ -168,7 +180,6 @@ set_target_properties(
 	Spdlog
 	tinygltf
 	#Imgui
-	Signals
 	PROPERTIES
 		FOLDER 
 			Externals
