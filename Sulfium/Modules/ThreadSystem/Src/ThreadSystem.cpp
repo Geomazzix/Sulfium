@@ -11,6 +11,5 @@ namespace SFM
 	void ThreadSystem::Terminate()
 	{
 		SFM_LOGINFO("Successfully terminated the thread system!");
-
 	}
 }

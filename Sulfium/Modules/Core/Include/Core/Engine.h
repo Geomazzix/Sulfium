@@ -2,6 +2,7 @@
 #include "Core/Printer/Printer.h"
 #include "Core/Events/EventSystem.h"
 #include "spdlog/spdlog.h"
+#include <entt/entt.hpp>
 
 namespace SFM
 {

@@ -3,8 +3,10 @@
 
 namespace SFM
 {
-	void VulkanModule::Initialize()
+	void VulkanModule::Initialize(std::weak_ptr<Engine> engine)
 	{
+		m_engine = engine;
+
 		SFM_LOGINFO("Vulkan successfully initialized!");
 		m_GraphicsAPI_Name = "VulkanRenderer";
 	}
@@ -16,7 +18,7 @@ namespace SFM
 
 	void VulkanModule::OnFrameBufferResize(const WindowResizeEventArgs& e)
 	{
-		SFM_LOGINFO("FRAMEBUFFER CHANGE DETECTED!");
+		SFM_LOGINFO("FRAMEBUFFER RESIZED!\n");
 	}
 }
 

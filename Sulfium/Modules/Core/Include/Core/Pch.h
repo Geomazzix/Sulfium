@@ -8,4 +8,8 @@
 #include <string>
 #include <any>
 #include <queue>
+#include <chrono>
+
+//#TODO: When going cross platform make sure to wrap this in a platform check
 #include <cassert>
+#define SFM_ASSERT assert 

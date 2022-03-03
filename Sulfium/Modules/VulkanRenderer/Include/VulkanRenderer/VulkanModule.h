@@ -13,11 +13,11 @@ namespace SFM
 		VulkanModule() = default;
 		~VulkanModule() = default;
 
-		void Initialize() override;
+		void Initialize(std::weak_ptr<Engine> engine) override;
 		void Terminate() override;
 
 		void OnFrameBufferResize(const WindowResizeEventArgs& e) override;
-
+		
 	private:
 		std::weak_ptr<Engine> m_engine;
 	};

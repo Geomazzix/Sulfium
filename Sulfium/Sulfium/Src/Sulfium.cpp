@@ -1,4 +1,6 @@
 #include "Sulfium.h"
+#include <Core/Timer/Stopwatch.h>
+#include "Ecs/Systems/TransformSystem.h"
 
 namespace SFM
 {
@@ -6,12 +8,6 @@ namespace SFM
 		m_sulfiumRunning(true),
 		m_sulfiumPaused(false)
 	{}
-
-	SFM::Sulfium& Sulfium::Get()
-	{
-		static Sulfium instance;
-		return instance;
-	}
 
 	void Sulfium::Initialize()
 	{
@@ -28,23 +24,23 @@ namespace SFM
 		dispatcher.sink<SFM::WindowTerminationEventArgs>().connect<&Sulfium::TriggerEngineLoopEnd>(this);
 		dispatcher.sink<SFM::WindowPauseEventArgs>().connect<&Sulfium::OnWindowPause>(this);
 
+		//Initializing the modules.
 		m_threadSystem.Initialize();
 		m_appCore.Initialize(m_engine);
 		m_renderCore.Initialize(m_engine, EGraphicsAPI::VULKAN);
 
+		//Creating the internal systems.
+		m_systemDirector.RegisterSystem(new TransformSystem(m_world.GetEcsWorld()));
+
 		SFM_LOGINFO("==========================================");
 		SFM_LOGINFO("Modules have been loaded: Sulfium successfully initialized.");
 		SFM_LOGINFO("==========================================");
-		SFM_LOGINFO("Entering engine loop:");
-
-		//Enter the engine loop.
-		EngineLoop();
 	}
 
 	void Sulfium::Terminate()
 	{
 		SFM_LOGINFO("==========================================");
-		SFM_LOGINFO("Exiting engine loop, starting to terminate all modules");
+		SFM_LOGINFO("Terminating all modules");
 
 		m_renderCore.Terminate();
 		m_appCore.Terminate();
@@ -66,18 +62,42 @@ namespace SFM
 		m_sulfiumPaused = e.DoesPause;
 	}
 
-	void Sulfium::EngineLoop()
+	void Sulfium::Run()
 	{
+		SFM_LOGINFO("Entering engine loop...");
+
+		float dt = 0.0f;
+		Stopwatch watch;
+
+		watch.Start();
 		while (m_sulfiumRunning)
 		{
 			//Only render if the window is not being resized.
 			if (!m_sulfiumPaused)
 			{
 				//RenderSystem.Render?
+				m_systemDirector.Update(dt);
 			}
 
 			m_appCore.Update();	//Poll windows events
 			m_engine->Update();	//Dispatch all queued events at the end of the frame.
+			
+			watch.Stop();
+			dt = watch.GetTimeInMs();
+			watch.Reset(true);
 		}
+
+		SFM_LOGINFO("Exiting engine loop...");
 	}
+
+	SFM::World& Sulfium::GetWorld()
+	{
+		return m_world;
+	}
+
+	SFM::SystemDirector& Sulfium::GetSystemDirector()
+	{
+		return m_systemDirector;
+	}
+
 }

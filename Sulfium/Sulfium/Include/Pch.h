@@ -8,10 +8,12 @@
 #include <set>
 #include <map>
 #include <unordered_map>
+#include <array>
 
 //C
 #include <cstdint>
 #include <cstdio>
+#include <ctime>
 
 //C++
 #include <algorithm>

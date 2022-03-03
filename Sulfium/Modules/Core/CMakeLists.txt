@@ -6,12 +6,14 @@ set(HEADER_FILES
 
 	Include/Core/Events/EventSystem.h
 	Include/Core/Events/EventArgs.h
+	Include/Core/Timer/Stopwatch.h
 )
 
 set(SOURCE_FILES
 	Src/Engine.cpp
 	Src/Printer.cpp
 	Src/EventSystem.cpp
+	Src/Stopwatch.cpp
 )
 
 SULFIUM_ADD_INTERNAL_STATIC_LIB(

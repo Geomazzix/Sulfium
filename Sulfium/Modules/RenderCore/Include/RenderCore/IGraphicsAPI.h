@@ -13,7 +13,7 @@ namespace SFM
 		IGraphicsAPI() = default;
 		virtual ~IGraphicsAPI() = default;
 
-		virtual void Initialize() = 0;
+		virtual void Initialize(std::weak_ptr<Engine> engine) = 0;
 		virtual void Terminate() = 0;
 
 		virtual void OnFrameBufferResize(const SFM::WindowResizeEventArgs& e) = 0;

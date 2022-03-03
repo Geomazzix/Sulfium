@@ -3,11 +3,31 @@ cmake_minimum_required(VERSION 3.16)
 #List all the header files.
 set(HEADER_FILES
 	Include/Sulfium.h
+
+	Include/World/World.h
+	
+	Include/Ecs/Entity.h
+	Include/Ecs/EcsUtility.h
+	Include/Ecs/SystemDirector.h
+
+	Include/Ecs/Components/NameComponent.h
+	Include/Ecs/Components/RelationComponent.h
+	Include/Ecs/Components/SceneComponent.h
+	Include/Ecs/Components/SceneEntityTypeComponent.h
+	Include/Ecs/Components/TransformComponent.h
+	
+	Include/Ecs/Systems/TransformSystem.h
+	Include/Ecs/Systems/ISystem.h
 )
 
 #List all the source files.
 set(SOURCE_FILES
 	Src/Sulfium.cpp
+	Src/World.cpp
+	Src/Entity.cpp
+	Src/TransformSystem.cpp
+	Src/ISystem.cpp
+	Src/SystemDirector.cpp
 )
 
 #Add the main library of the project.
@@ -30,6 +50,7 @@ target_link_libraries(Sulfium PUBLIC
 	ThreadSystem
 	ApplicationCore
 	RenderCore
+	glm
 )
 
 target_compile_definitions(Sulfium INTERFACE
