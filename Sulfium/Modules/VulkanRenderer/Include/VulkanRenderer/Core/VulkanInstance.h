@@ -27,7 +27,7 @@ namespace SFM
 	private:
 		void InitializeDynamicLoader();
 		void CreateInstance();
-
+		
 		bool CheckLayerSupport();
 		std::vector<const char*> GetRequiredExtentions();
 

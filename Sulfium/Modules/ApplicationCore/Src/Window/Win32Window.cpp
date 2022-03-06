@@ -23,8 +23,6 @@ namespace SFM
 		
 		m_input = input;
 		m_engine = engine;
-		//m_engine.lock()->GetEventMessenger().AddMessenger<SFM::ResizeEventArgs&>("OnWindowResize");
-
 		m_widthInPx = width;
 		m_heightInPx = height;
 

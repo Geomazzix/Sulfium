@@ -1,10 +1,21 @@
 #pragma once
-#include "Core/Engine.h"
+#include <Core/Engine.h>
 #include "ApplicationCore/Window/WindowEventArgs.h"
 #include "ApplicationCore/Window/Window.h"
 
 namespace SFM
 {
+	/// <summary>
+	/// The info needed for any graphics API to be initialized.
+	/// </summary>
+	struct GraphicsAPICreateInfo
+	{
+		std::weak_ptr<Engine> Engine;
+		WindowHandle Window;
+		int FrameBufferWidth;
+		int FrameBufferHeight;
+	};
+
 	/// <summary>
 	/// The core module interface, each module within the engine will inherit using this.
 	/// </summary>
@@ -14,7 +25,7 @@ namespace SFM
 		IGraphicsAPI() = default;
 		virtual ~IGraphicsAPI() = default;
 
-		virtual void Initialize(std::weak_ptr<Engine> engine, WindowHandle window) = 0;
+		virtual void Initialize(GraphicsAPICreateInfo&& info) = 0;
 		virtual void Terminate() = 0;
 
 		virtual void OnFrameBufferResize(const SFM::WindowResizeEventArgs& e) = 0;

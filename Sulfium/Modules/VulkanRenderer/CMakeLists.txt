@@ -15,7 +15,9 @@ set(HEADER_FILES
 	Include/VulkanRenderer/Core/VulkanDevice.h
 	Include/VulkanRenderer/Core/VulkanQueueFamilyIndices.h
 	Include/VulkanRenderer/Core/VulkanSwapChainRenderTargetInfo.h
-	
+	Include/VulkanRenderer/Core/VulkanSwapchain.h
+	Include/VulkanRenderer/Core/VulkanContext.h
+
 	Include/VulkanRenderer/Utility/VulkanDebugMessenger.h
 )
 
@@ -26,6 +28,7 @@ set(SOURCE_FILES
 	Src/VulkanPhysicalDevice.cpp
 	Src/VulkanDevice.cpp
 	Src/VulkanDebugMessenger.cpp
+	Src/VulkanSwapchain.cpp
 )
 
 SULFIUM_ADD_INTERNAL_MODULE_LIB(

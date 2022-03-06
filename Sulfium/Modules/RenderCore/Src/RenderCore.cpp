@@ -64,7 +64,15 @@ namespace SFM
 
 		if (m_activeGraphicsAPI != EGraphicsAPI::UNIDENTIFIED)
 		{
-			m_graphicsAPI->Initialize(m_engine, m_window->GetWindowHandle());
+			GraphicsAPICreateInfo createInfo =
+			{
+				m_engine,
+				m_window->GetWindowHandle(),
+				m_window->GetWindowWidth(),
+				m_window->GetWindowHeight()
+			};
+
+			m_graphicsAPI->Initialize(std::move(createInfo));
 		
 			//Since the graphics APIs don't have access to the engine: create the events here.
 			m_engine.lock()->GetEventSystem().GetEventDispatcher("Window").sink<SFM::WindowResizeEventArgs>().connect<&IGraphicsAPI::OnFrameBufferResize>(m_graphicsAPI);

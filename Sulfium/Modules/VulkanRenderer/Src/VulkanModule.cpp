@@ -9,19 +9,19 @@ namespace SFM
 		m_selectedPhysicalDevice(INT_MAX)
 	{}
 
-	void VulkanModule::Initialize(std::weak_ptr<Engine> engine, WindowHandle windowHandle)
+	void VulkanModule::Initialize(GraphicsAPICreateInfo&& info)
 	{
 		SFM_LOGINFO("==========================================");
 		SFM_LOGINFO("Vulkan boot info:\n");
 
-		m_engine = engine;
+		m_engine = info.Engine;
 		m_GraphicsAPI_Name = "VulkanRenderer";
 
 		m_ctx.Instance.Initialize(m_validationLayers);
 
 #if defined(WIN32) || defined(WIN64)
 		vk::Win32SurfaceCreateInfoKHR createInfo;
-		createInfo.hwnd = windowHandle;
+		createInfo.hwnd = info.Window;
 		createInfo.hinstance = GetModuleHandle(nullptr);
 
 		m_ctx.Surface = m_ctx.Instance().createWin32SurfaceKHR(createInfo);
@@ -30,6 +30,17 @@ namespace SFM
 		m_ctx.PhysicalDevice = &m_foundPhysicalDevices[SelectPhysicalDevice(m_ctx.Surface)];
 		m_ctx.Device.Initialize(m_foundPhysicalDevices[m_selectedPhysicalDevice], m_requiredDeviceExtentions);
 
+		VulkanSwapchainCreateInfo swapChainCreateInfo =
+		{
+			*m_ctx.PhysicalDevice,
+			m_ctx.Device,
+			m_ctx.Surface,
+			info.FrameBufferWidth,
+			info.FrameBufferHeight
+		};
+
+		m_ctx.SwapChain.Initialize(std::move(swapChainCreateInfo));
+
 		SFM_LOGINFO("==========================================");
 		SFM_LOGINFO("Vulkan successfully initialized!");
 		SFM_LOGINFO("==========================================");
@@ -37,6 +48,7 @@ namespace SFM
 
 	void VulkanModule::Terminate()
 	{
+		m_ctx.SwapChain.Terminate();
 		m_ctx.Device.Terminate();
 		m_ctx.PhysicalDevice = nullptr;
 
@@ -47,6 +59,7 @@ namespace SFM
 		m_foundPhysicalDevices.clear();
 		m_selectedPhysicalDevice = INT_MAX;
 
+		m_ctx.Instance.Get().destroySurfaceKHR(m_ctx.Surface);
 		m_ctx.Instance.Terminate();
 
 		SFM_LOGINFO("Vulkan successfully terminated!");
@@ -54,7 +67,16 @@ namespace SFM
 
 	void VulkanModule::OnFrameBufferResize(const WindowResizeEventArgs& e)
 	{
-		SFM_LOGINFO("FRAMEBUFFER RESIZED!\n");
+		VulkanSwapchainCreateInfo swapChainCreateInfo =
+		{
+			*m_ctx.PhysicalDevice,
+			m_ctx.Device,
+			m_ctx.Surface,
+			e.Width,
+			e.Height
+		};
+
+		m_ctx.SwapChain.Recreate(std::move(swapChainCreateInfo));
 	}
 
 	int VulkanModule::SelectPhysicalDevice(vk::SurfaceKHR& surface)

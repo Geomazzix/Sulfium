@@ -1,24 +1,10 @@
 #pragma once
 #include "RenderCore/IGraphicsAPI.h"
 #include "ApplicationCore/Window/WindowEventArgs.h"
-
-#include "VulkanRenderer/Core/VulkanInstance.h"
-#include "VulkanRenderer/Core/VulkanDevice.h"
-#include "VulkanRenderer/Core/VulkanPhysicalDevice.h"
+#include "VulkanRenderer/Core/VulkanContext.h"
 
 namespace SFM
 {
-	/// <summary>
-	/// Holds accessibility to the core elements of the Vulkan API.
-	/// </summary>
-	struct VulkanContext
-	{
-		VulkanInstance Instance;
-		VulkanPhysicalDevice* PhysicalDevice;
-		VulkanDevice Device;
-		vk::SurfaceKHR Surface;
-	};
-
 	/// <summary>
 	/// Represents the application at the very core. This class holds the lifetime of the application.
 	/// </summary>
@@ -28,7 +14,7 @@ namespace SFM
 		VulkanModule();
 		~VulkanModule() = default;
 
-		void Initialize(std::weak_ptr<Engine> engine, WindowHandle windowHandle) override;
+		void Initialize(GraphicsAPICreateInfo&& info) override;
 		void Terminate() override;
 
 		void OnFrameBufferResize(const WindowResizeEventArgs& e) override;
