@@ -7,13 +7,12 @@ namespace SFM
 		m_activeGraphicsAPI(EGraphicsAPI::UNIDENTIFIED),
 		m_graphicsAPI(nullptr),
 		m_engine()
-	{
+	{}
 
-	}
-
-	void RenderCore::Initialize(std::weak_ptr<Engine> engine, EGraphicsAPI api)
+	void RenderCore::Initialize(std::weak_ptr<Engine> engine, Window& window, EGraphicsAPI api)
 	{
 		m_engine = engine;
+		m_window = &window;
 
 		LoadGraphicsAPI(api);
 		SFM_LOGINFO("Successfully loaded the requested graphics API!");
@@ -21,6 +20,7 @@ namespace SFM
 
 	void RenderCore::Terminate()
 	{
+		m_window = nullptr;
 		m_graphicsAPI->Terminate();
 		m_graphicsAPILoader.UnloadGraphicsAPI(m_graphicsAPI->GetName());
 		SFM_LOGINFO("Successfully terminated the graphics API!");
@@ -64,7 +64,7 @@ namespace SFM
 
 		if (m_activeGraphicsAPI != EGraphicsAPI::UNIDENTIFIED)
 		{
-			m_graphicsAPI->Initialize(m_engine);
+			m_graphicsAPI->Initialize(m_engine, m_window->GetWindowHandle());
 		
 			//Since the graphics APIs don't have access to the engine: create the events here.
 			m_engine.lock()->GetEventSystem().GetEventDispatcher("Window").sink<SFM::WindowResizeEventArgs>().connect<&IGraphicsAPI::OnFrameBufferResize>(m_graphicsAPI);

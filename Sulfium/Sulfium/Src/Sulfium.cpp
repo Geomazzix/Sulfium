@@ -27,7 +27,7 @@ namespace SFM
 		//Initializing the modules.
 		m_threadSystem.Initialize();
 		m_appCore.Initialize(m_engine);
-		m_renderCore.Initialize(m_engine, EGraphicsAPI::VULKAN);
+		m_renderCore.Initialize(m_engine, m_appCore.GetWindow(), EGraphicsAPI::VULKAN);
 
 		//Creating the internal systems.
 		m_systemDirector.RegisterSystem(new TransformSystem(m_world.GetEcsWorld()));

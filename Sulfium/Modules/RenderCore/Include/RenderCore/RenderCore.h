@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/Engine.h>
 #include "RenderCore/GraphicsAPILoader.h"
+#include "ApplicationCore/Window/Window.h"
 
 namespace SFM
 {
@@ -26,7 +27,7 @@ namespace SFM
 		RenderCore();
 		~RenderCore() = default;
 
-		void Initialize(std::weak_ptr<Engine> engine, EGraphicsAPI api);
+		void Initialize(std::weak_ptr<Engine> engine, Window& window, EGraphicsAPI api);
 		void Terminate();
 	
 	private:
@@ -37,5 +38,7 @@ namespace SFM
 		GraphicsAPILoader m_graphicsAPILoader;
 		IGraphicsAPI* m_graphicsAPI;
 		EGraphicsAPI m_activeGraphicsAPI;
+
+		Window* m_window; //This link is needed for the surface creation in Vulkan and Dx12.
 	};
 }

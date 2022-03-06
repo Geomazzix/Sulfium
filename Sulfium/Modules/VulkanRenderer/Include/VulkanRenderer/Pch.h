@@ -11,10 +11,15 @@
 #include <map>
 #include <string>
 #include <queue>
+#include <set>
 
 //C
 #include <cstdio>
 #include <cassert>
 
+//Core includes
+#include <Core/Printer/Printer.h>
+
 //Vulkan specific.
-//#include <vulkan.h>
+#define VULKAN_HPP_DISPATCH_LOADER_DYNAMIC 1
+#include <Vulkan/Vulkan.hpp>
