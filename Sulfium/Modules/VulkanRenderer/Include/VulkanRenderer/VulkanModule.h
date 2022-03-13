@@ -3,6 +3,9 @@
 #include "ApplicationCore/Window/WindowEventArgs.h"
 #include "VulkanRenderer/Core/VulkanContext.h"
 
+#include "VulkanRenderer/CommandBuffers/VulkanCommandBufferPool.h"
+#include "VulkanRenderer/CommandBuffers/VulkanCommandBuffer.h"
+
 namespace SFM
 {
 	/// <summary>
@@ -29,12 +32,14 @@ namespace SFM
 
 		VulkanContext m_ctx;
 
+		VulkanCommandBufferPool m_cmdBufferPool;
+		std::vector<VulkanCommandBuffer> m_cmdBuffers;
+
 		const std::vector<const char*> m_requiredDeviceExtentions =
 		{
 			VK_KHR_SWAPCHAIN_EXTENSION_NAME
 		};
-
-		const std::vector<const char*> m_validationLayers =
+		const std::vector<const char*> m_requiredValidationLayers =
 		{
 			"VK_LAYER_KHRONOS_validation"
 		};

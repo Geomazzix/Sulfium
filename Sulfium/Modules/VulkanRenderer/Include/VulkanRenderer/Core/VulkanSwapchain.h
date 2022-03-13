@@ -1,11 +1,12 @@
 #pragma once
 #include "VulkanRenderer/Core/VulkanDevice.h"
 #include "VulkanRenderer/Core/VulkanPhysicalDevice.h"
+#include "VulkanRenderer/Resources/VulkanFramebuffer.h"
+
+#include "VulkanRenderer/Resources/VulkanImage.h"
 
 namespace SFM
 {
-	class VulkanContext;
-
 	struct VulkanSwapchainCreateInfo
 	{
 		VulkanPhysicalDevice& PhysicalDevice;
@@ -13,6 +14,7 @@ namespace SFM
 		vk::SurfaceKHR& Surface;
 		int FrameBufferWidthInPx;
 		int FrameBufferHeightInPx;
+		vk::RenderPass RenderPass;
 	};
 
 	/// <summary>
@@ -34,17 +36,22 @@ namespace SFM
 		vk::PresentModeKHR ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
 		vk::Extent2D ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities, int frameBufferWidth, int frameBufferHeight);
 
+		void DestroyInternals();
+
 		void CreateSwapChain(VulkanSwapchainCreateInfo& info);
-		void DestroySwapChain();
 		void CreateImageViews(VulkanDevice& device);
+		void CreateFrameBuffers(VulkanDevice& device, vk::RenderPass& renderPass);
 
 		vk::SwapchainKHR m_swapchain;
 		vk::Format m_swapChainFormat;
 		vk::Extent2D m_swapChainExtent;
 
-		std::vector<vk::Image> m_swapChainImages;
-		std::vector<vk::ImageView> m_swapChainImageViews;
-		std::vector<vk::Framebuffer> m_swapChainFrameBuffers;
+		std::vector<vk::Image> m_swapChainImages; //Don't use Vulkan image when you can't identify the image.
+		std::vector<VulkanImageViewHandle> m_swapChainImageViews;
+		std::vector<VulkanFrameBufferHandle> m_swapChainFrameBuffers;
+
+		const std::string m_swapchainImageViewName = "SwapchainImageView_";
+		const std::string m_swapchainFrameBufferName= "SwapChainFrameBuffer_";
 
 		VulkanDevice* m_device;
 	};

@@ -17,7 +17,7 @@ namespace SFM
 		m_engine = info.Engine;
 		m_GraphicsAPI_Name = "VulkanRenderer";
 
-		m_ctx.Instance.Initialize(m_validationLayers);
+		m_ctx.Instance.Initialize(m_requiredValidationLayers);
 
 #if defined(WIN32) || defined(WIN64)
 		vk::Win32SurfaceCreateInfoKHR createInfo;
@@ -36,10 +36,14 @@ namespace SFM
 			m_ctx.Device,
 			m_ctx.Surface,
 			info.FrameBufferWidth,
-			info.FrameBufferHeight
+			info.FrameBufferHeight,
+			nullptr
 		};
 
+		//#TODO: Move this part to a separate thread.
 		m_ctx.SwapChain.Initialize(std::move(swapChainCreateInfo));
+		m_cmdBufferPool.Initialize(m_foundPhysicalDevices[m_selectedPhysicalDevice], m_ctx.Device);
+		m_cmdBuffers.push_back(VulkanCommandBuffer(m_cmdBufferPool.AllocateCmdBuffer(vk::CommandBufferLevel::ePrimary)));
 
 		SFM_LOGINFO("==========================================");
 		SFM_LOGINFO("Vulkan successfully initialized!");
@@ -48,6 +52,9 @@ namespace SFM
 
 	void VulkanModule::Terminate()
 	{
+		m_cmdBuffers.clear();
+		m_cmdBufferPool.Terminate();
+
 		m_ctx.SwapChain.Terminate();
 		m_ctx.Device.Terminate();
 		m_ctx.PhysicalDevice = nullptr;
@@ -73,7 +80,8 @@ namespace SFM
 			m_ctx.Device,
 			m_ctx.Surface,
 			e.Width,
-			e.Height
+			e.Height,
+			nullptr
 		};
 
 		m_ctx.SwapChain.Recreate(std::move(swapChainCreateInfo));
@@ -88,7 +96,7 @@ namespace SFM
 			return -1;
 		}
 
-		//Though vulkan supports simultaneous GPU processing, I chose to not get into this. Since the API is already hard enough to learn by itself.
+		//Though Vulkan supports simultaneous GPU processing, I chose to not get into this. Since the API is already hard enough to learn by itself.
 		m_foundPhysicalDevices.reserve(physicalDevices.size());
 		for (int i = 0; i < physicalDevices.size(); i++)
 		{

@@ -3,8 +3,19 @@
 
 namespace SFM
 {
+	VulkanDevice::VulkanDevice() :
+		m_physicalDevice(nullptr)
+	{}
+
+	VulkanDevice::~VulkanDevice()
+	{
+		m_physicalDevice = nullptr;
+	}
+
 	void VulkanDevice::Initialize(VulkanPhysicalDevice& physDevice, const std::vector<const char*>& extensions)
 	{
+		m_physicalDevice = &physDevice;
+
 		QueueFamilyIndices deviceQueueFamilyIndices = physDevice.FindGraphicsDisplayQueueFamily();
 
 		float queuePriority = 1.0f;
@@ -16,7 +27,9 @@ namespace SFM
 		};
 
 		for (uint32_t queueFamily : uniqueQueueFamilies)
+		{
 			queueCreateInfos.emplace_back(vk::DeviceQueueCreateFlags(), queueFamily, 1, &queuePriority);
+		}
 
 		vk::PhysicalDeviceFeatures physcDeviceFeatures{};
 		vk::DeviceCreateInfo deviceCreateInfo =
@@ -58,5 +71,49 @@ namespace SFM
 	vk::Device& VulkanDevice::Get()
 	{
 		return m_device;
+	}
+
+	VulkanFrameBufferHandle VulkanDevice::CreateVulkanFrameBuffer(const VulkanResourceId& id, const vk::FramebufferCreateInfo& createInfo)
+	{
+		return m_resourceCache.FrameBufferCache.load<VulkanFrameBufferLoader>(id, m_device, createInfo);
+	}
+
+	void VulkanDevice::DestroyVulkanFrameBuffer(const VulkanResourceId& id)
+	{
+		SFM_ASSERT(m_resourceCache.FrameBufferCache.contains(id));
+		
+		auto& frameBuffer = m_resourceCache.FrameBufferCache.handle(id);
+		m_device.destroyFramebuffer(frameBuffer->Get());
+		m_resourceCache.FrameBufferCache.discard(id);
+	}
+
+	VulkanImageHandle VulkanDevice::CreateVulkanImage(const VulkanResourceId& id, const vk::ImageCreateInfo& createInfo, vk::MemoryPropertyFlags memProps)
+	{
+		return m_resourceCache.ImageCache.load<VulkanImageLoader>(id, m_device, *m_physicalDevice, createInfo, memProps);;
+	}
+
+	void VulkanDevice::DestroyVulkanImage(const VulkanResourceId& id)
+	{
+		SFM_ASSERT(m_resourceCache.ImageCache.contains(id));
+		auto& image = m_resourceCache.ImageCache.handle(id);
+
+		m_device.freeMemory(image->GetMemory());
+		m_device.destroyImage(image->GetHandle());
+	
+		m_resourceCache.ImageCache.discard(id);
+	}
+
+	VulkanImageViewHandle VulkanDevice::CreateImageView(const VulkanResourceId& id, const vk::ImageViewCreateInfo& createInfo)
+	{
+		return m_resourceCache.ImageViewCache.load<VulkanImageViewLoader>(id, m_device, createInfo);
+	}
+
+	void VulkanDevice::DestroyImageView(const VulkanResourceId& id)
+	{
+		SFM_ASSERT(m_resourceCache.ImageViewCache.contains(id));
+		auto& imageView = m_resourceCache.ImageViewCache.handle(id);
+
+		m_device.destroyImageView(imageView->GetHandle());
+		m_resourceCache.ImageViewCache.discard(id);
 	}
 }

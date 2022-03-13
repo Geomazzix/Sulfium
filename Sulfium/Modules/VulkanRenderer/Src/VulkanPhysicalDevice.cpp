@@ -124,4 +124,18 @@ namespace SFM
 		}
 		SFM_LOGINFO("\n");
 	}
+
+	uint32_t VulkanPhysicalDevice::FindMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags requestedProps)
+	{
+		vk::PhysicalDeviceMemoryProperties physicalMemProps = m_physicalDevice.getMemoryProperties();
+		for (uint32_t i = 0; i < physicalMemProps.memoryTypeCount; i++)
+		{
+			if ((typeFilter & (1 << i)) && (physicalMemProps.memoryTypes[i].propertyFlags & requestedProps) == requestedProps) //Check if the bit in the typefilter is set to one, if so, then the requested memory is available.
+			{
+				return i;
+			}
+		}
+
+		throw std::runtime_error("Failed to find suitable memory type!");
+	}
 }

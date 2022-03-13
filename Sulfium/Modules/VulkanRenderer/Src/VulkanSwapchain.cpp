@@ -1,5 +1,4 @@
 #include "VulkanRenderer/Core/VulkanSwapchain.h"
-#include "VulkanRenderer/Core/VulkanContext.h"
 
 namespace SFM
 {
@@ -13,17 +12,20 @@ namespace SFM
 
 		CreateSwapChain(info);
 		CreateImageViews(info.Device);
+		//CreateFrameBuffers(info.Device, info.RenderPass);
 	}
 
 	void VulkanSwapchain::Terminate()
 	{
-		DestroySwapChain();
+		DestroyInternals();
 	}
 
 	void VulkanSwapchain::Recreate(VulkanSwapchainCreateInfo&& info)
 	{
-		DestroySwapChain();
+		DestroyInternals();
 		CreateSwapChain(info);
+		CreateImageViews(info.Device);
+		//CreateFrameBuffers(info.Device, info.RenderPass);
 	}
 
 	void VulkanSwapchain::CreateSwapChain(VulkanSwapchainCreateInfo& info)
@@ -78,16 +80,23 @@ namespace SFM
 		}
 
 		m_swapchain = info.Device().createSwapchainKHR(swapChainCreateInfo);
+
 		m_swapChainImages = info.Device().getSwapchainImagesKHR(m_swapchain);
 		m_swapChainExtent = extents;
 		m_swapChainFormat = surfaceFormat.format;
 	}
 
-	void VulkanSwapchain::DestroySwapChain()
+	void VulkanSwapchain::DestroyInternals()
 	{
-		for (auto& imageView : m_swapChainImageViews)
+		//for (int i = 0; i < m_swapChainFrameBuffers.size(); i++)
+		//{
+		//	m_device->DestroyVulkanFrameBuffer(VulkanResourceId((m_swapchainFrameBufferName + std::to_string(i)).c_str()));
+		//}
+		//m_swapChainFrameBuffers.clear();
+
+		for (int i = 0; i < m_swapChainImageViews.size(); i++)
 		{
-			m_device->Get().destroyImageView(imageView);
+			m_device->DestroyImageView(VulkanResourceId((m_swapchainImageViewName + std::to_string(i)).c_str()));
 		}
 
 		m_swapChainImageViews.clear();
@@ -156,7 +165,33 @@ namespace SFM
 				vk::ImageSubresourceRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1)
 			};
 
-			m_swapChainImageViews.emplace_back(device().createImageView(imageViewCreateInfo));
+			m_swapChainImageViews.emplace_back(device.CreateImageView(VulkanResourceId((m_swapchainImageViewName + std::to_string(i)).c_str()), imageViewCreateInfo));
+		}
+	}
+
+	void VulkanSwapchain::CreateFrameBuffers(VulkanDevice& device, vk::RenderPass& renderPass)
+	{
+		m_swapChainFrameBuffers.reserve(m_swapChainImageViews.size());
+		for (size_t i = 0; i < m_swapChainImageViews.size(); i++)
+		{
+			//#TODO: Add depth en stencil buffer to the swap chain frame buffers.
+			std::vector<vk::ImageView> attachments =
+			{
+				m_swapChainImageViews[i]->GetHandle()
+			};
+
+			vk::FramebufferCreateInfo createInfo =
+			{
+				vk::FramebufferCreateFlags(),
+				renderPass,
+				static_cast<uint32_t>(attachments.size()),
+				attachments.data(),
+				m_swapChainExtent.width,
+				m_swapChainExtent.height,
+				1,
+			};
+
+			m_swapChainFrameBuffers.emplace_back(device.CreateVulkanFrameBuffer(VulkanResourceId((m_swapchainFrameBufferName + std::to_string(i)).c_str()), createInfo));
 		}
 	}
 }

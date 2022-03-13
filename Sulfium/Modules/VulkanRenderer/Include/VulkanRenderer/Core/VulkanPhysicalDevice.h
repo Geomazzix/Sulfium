@@ -22,7 +22,10 @@ namespace SFM
 
 		vk::PhysicalDevice& operator()();
 
+		uint32_t FindMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags requestedProps);
+
 	private:
+
 		bool IsSwapChainCompatible() const;
 		void LogPhysicalDeviceInfo();
 

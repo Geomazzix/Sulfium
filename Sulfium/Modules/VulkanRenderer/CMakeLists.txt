@@ -19,6 +19,15 @@ set(HEADER_FILES
 	Include/VulkanRenderer/Core/VulkanContext.h
 
 	Include/VulkanRenderer/Utility/VulkanDebugMessenger.h
+
+	Include/VulkanRenderer/SceneGraph/VulkanRenderPass.h
+	Include/VulkanRenderer/SceneGraph/VulkanGraphicsPipeline.h
+
+	Include/VulkanRenderer/Commandbuffers/VulkanCommandBufferPool.h
+	Include/VulkanRenderer/CommandBuffers/VulkanCommandBuffer.h
+
+	Include/VulkanRenderer/Resources/VulkanFrameBuffer.h
+	Include/VulkanRenderer/Resources/VulkanImage.h
 )
 
 set(SOURCE_FILES
@@ -29,6 +38,10 @@ set(SOURCE_FILES
 	Src/VulkanDevice.cpp
 	Src/VulkanDebugMessenger.cpp
 	Src/VulkanSwapchain.cpp
+	Src/VulkanRenderPass.cpp
+	Src/VulkanGraphicsPipeline.cpp
+	Src/VulkanCommandBufferPool.cpp
+	Src/VulkanCommandBuffer.cpp
 )
 
 SULFIUM_ADD_INTERNAL_MODULE_LIB(
