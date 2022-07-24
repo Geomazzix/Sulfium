@@ -32,9 +32,15 @@ target_link_libraries(RenderCore PUBLIC
 	Core
 )
 
-if(${BUILD_VULKAN_BACKEND})
+if(BUILD_VULKAN_BACKEND)
 target_compile_definitions(RenderCore PRIVATE
 	VULKAN_BACKEND
+)
+endif()
+
+if(BUILD_D3D12_BACKEND)
+target_compile_definitions(RenderCore PRIVATE
+	D3D12_BACKEND
 )
 endif()
 

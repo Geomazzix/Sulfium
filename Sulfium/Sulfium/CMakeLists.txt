@@ -17,6 +17,7 @@ set(HEADER_FILES
 	Include/Ecs/Components/TransformComponent.h
 	
 	Include/Ecs/Systems/TransformSystem.h
+	Include/Ecs/Systems/RenderSystem.h
 	Include/Ecs/Systems/ISystem.h
 )
 
@@ -28,6 +29,7 @@ set(SOURCE_FILES
 	Src/TransformSystem.cpp
 	Src/ISystem.cpp
 	Src/SystemDirector.cpp
+	Src/RenderSystem.cpp
 )
 
 #Add the main library of the project.

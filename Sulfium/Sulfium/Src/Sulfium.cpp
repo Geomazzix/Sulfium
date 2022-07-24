@@ -1,6 +1,7 @@
 #include "Sulfium.h"
 #include <Core/Timer/Stopwatch.h>
 #include "Ecs/Systems/TransformSystem.h"
+#include "Ecs/Systems/RenderSystem.h"
 
 namespace SFM
 {
@@ -27,10 +28,11 @@ namespace SFM
 		//Initializing the modules.
 		m_threadSystem.Initialize();
 		m_appCore.Initialize(m_engine);
-		m_renderCore.Initialize(m_engine, m_appCore.GetWindow(), EGraphicsAPI::VULKAN);
+		m_renderCore.Initialize(m_engine, m_appCore.GetWindow(), EGraphicsAPI::DX12);
 
 		//Creating the internal systems.
 		m_systemDirector.RegisterSystem(new TransformSystem(m_world.GetEcsWorld()));
+		m_systemDirector.RegisterSystem(new RenderSystem(m_renderCore));
 
 		SFM_LOGINFO("==========================================");
 		SFM_LOGINFO("Modules have been loaded: Sulfium successfully initialized.");
@@ -66,25 +68,38 @@ namespace SFM
 	{
 		SFM_LOGINFO("Entering engine loop...");
 
-		float dt = 0.0f;
-		Stopwatch watch;
+		Stopwatch timeWatch;
+		timeWatch.Start();
 
-		watch.Start();
+		uint32_t frameCount = 0;
+		float timeElapsedInSec = 0.0f;
+
+		float dt = 0.0f;
+		Stopwatch deltaTimeWatch;
+		deltaTimeWatch.Start();
+		
 		while (m_sulfiumRunning)
 		{
+			++frameCount;
+
 			//Only render if the window is not being resized.
 			if (!m_sulfiumPaused)
 			{
-				//RenderSystem.Render?
 				m_systemDirector.Update(dt);
 			}
 
 			m_appCore.Update();	//Poll windows events
 			m_engine->Update();	//Dispatch all queued events at the end of the frame.
-			
-			watch.Stop();
-			dt = watch.GetTimeInMs();
-			watch.Reset(true);
+
+			dt = deltaTimeWatch.GetTimeInMs();
+
+			if ((timeWatch.GetTimeInSec() - timeElapsedInSec) >= 1.0f)
+			{
+				m_appCore.GetWindow().UpdateWindowTitleStats(frameCount);
+				frameCount = 0;
+				timeElapsedInSec += 1.0f;
+			}
+			deltaTimeWatch.Reset(true);
 		}
 
 		SFM_LOGINFO("Exiting engine loop...");

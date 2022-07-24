@@ -41,7 +41,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Bin)
 #The options provided by Sulfium for the user to configure.
 option(SULFIUM_SHARED "Builds Sulfium as a shared library" OFF)
 option(SULFIUM_INSTALL "Installs the full build into an provided install directory" ON)
-option(BUILD_VULKAN_BACKEND "Specify whether you want the Vulkan backend to be build" ON)
+option(BUILD_VULKAN_BACKEND "Specify whether you want the Vulkan backend to be build" OFF)
+option(BUILD_D3D12_BACKEND "Specify whether you want the D3D12 backend to be build" ON)
 option(USE_SULFIUM_GLTF "Specify whether the user wants to use the Sulfium GLTF module, which currently is a wrapper for TinyGltf" ON)
 
 #Add all the 3rd party dependencies, project modules. They are called module, though this should not be confused with the CMake terminology for a "Module Library", more on this
@@ -71,8 +72,14 @@ set(SULFIUM_EXPORT_TARGETS
 	RenderCore
 )
 
+
 if(BUILD_VULKAN_BACKEND)
+message("VULKAN IS BEING BUILD!!!!")
 list(APPEND SULFIUM_EXPORT_TARGETS VulkanRenderer) #Component loaded in on runtime as shared library
+endif()
+
+if(BUILD_D3D12_BACKEND)
+list(APPEND SULFIUM_EXPORT_TARGETS D3D12Renderer) #Component loaded in on runtime as shared library
 endif()
 
 if(USE_SULFIUM_GLTF)

@@ -30,6 +30,8 @@ namespace SFM
 
 		virtual void OnFrameBufferResize(const SFM::WindowResizeEventArgs& e) = 0;
 
+		virtual void Render() = 0;
+
 		//#TODO: Add graphics API methods that all graphics APIs should be able to adhere to.
 	
 		const std::string& GetName() const

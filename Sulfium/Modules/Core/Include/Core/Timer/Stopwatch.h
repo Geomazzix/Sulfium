@@ -4,6 +4,7 @@ namespace SFM
 {
 	/// <summary>
 	/// Used to track time throughout the engine, uses std::chrono as backend.
+	/// NOTE: The time values are ONLY valid AFTER calling Stop().
 	/// </summary>
 	class Stopwatch
 	{
@@ -15,7 +16,6 @@ namespace SFM
 		Stopwatch(Stopwatch&& rhs) = default;
 
 		void Start();
-		void Stop();
 		void Reset(bool startAgain = false);
 
 		float GetTimeInSec();
@@ -23,7 +23,8 @@ namespace SFM
 		float GetTimeInNs();
 
 	private:
-		std::chrono::high_resolution_clock::time_point m_start;
-		float m_timeInSec;
+		std::chrono::steady_clock::time_point m_start;
+		std::chrono::steady_clock::time_point m_end;
+		std::chrono::duration<float> m_duration;
 	};
 }

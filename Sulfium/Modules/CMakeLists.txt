@@ -11,6 +11,10 @@ if(BUILD_VULKAN_BACKEND)
 add_subdirectory(VulkanRenderer)
 endif()
 
+if(BUILD_D3D12_BACKEND)
+add_subdirectory(D3D12Renderer)
+endif()
+
 if(USE_SULFIUM_GLTF)
 add_subdirectory(Gltf)
 endif()

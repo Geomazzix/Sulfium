@@ -6,7 +6,7 @@
 namespace SFM
 {
 	Win32Window::Win32Window() :
-		m_title(L""),
+		m_title(L"Sulfium"),
 		m_className(L"SulfiumAppWindow"),
 		m_handle(nullptr),
 		m_windowClose(false),
@@ -54,7 +54,7 @@ namespace SFM
 
 		//Create the window.
 		m_handle = CreateWindowExW(
-			NULL,
+			WS_EX_LTRREADING,
 			m_className.c_str(),
 			m_title.c_str(),
 			WS_OVERLAPPEDWINDOW,
@@ -122,6 +122,21 @@ namespace SFM
 	bool Win32Window::DoesWindowClose() const
 	{
 		return m_windowClose;
+	}
+
+	void Win32Window::UpdateWindowTitleStats(uint32_t frameCountPerSec)
+	{
+		float fps = (float)frameCountPerSec; // fps = frameCnt / 1
+		float mspf = 1000.0f / fps;
+
+		std::wstring fpsStr = std::to_wstring(fps);
+		std::wstring mspfStr = std::to_wstring(mspf);
+
+		std::wstring windowText = m_title +
+			L"    fps: " + fpsStr +
+			L"   mspf: " + mspfStr;
+
+		SetWindowText(m_handle, windowText.c_str());
 	}
 
 	const std::wstring& Win32Window::GetWindowTitle() const

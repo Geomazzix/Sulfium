@@ -28,6 +28,7 @@
 
 //Windows specific utility.
 #if defined(WIN32) || defined(WIN64)
+#define UNICODE
 #ifdef _MSC_VER
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN

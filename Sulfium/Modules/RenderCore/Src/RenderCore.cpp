@@ -26,6 +26,11 @@ namespace SFM
 		SFM_LOGINFO("Successfully terminated the graphics API!");
 	}
 
+	void RenderCore::Render()
+	{
+		m_graphicsAPI->Render();
+	}
+
 	void RenderCore::LoadGraphicsAPI(EGraphicsAPI api)
 	{
 		if (m_activeGraphicsAPI == api)
@@ -47,35 +52,41 @@ namespace SFM
 			m_graphicsAPI = m_graphicsAPILoader.LoadGraphicsAPI("VulkanRenderer").Handle;
 			m_activeGraphicsAPI = EGraphicsAPI::VULKAN;
 #else
-			SFM_LOGERROR("Trying to load in a backend that hasn't been build!\n Make sure to set BUILD_VULKAN_BACKEND to ON during the CMake build process!");
+			SFM_LOGERROR("Trying to load in a backend that hasn't been build!\n Make sure to set BUILD_VULKAN_BACKEND to ON during the CMake configuration stage!");
 #endif
 			break;
 		case EGraphicsAPI::DX12:
-			SFM_LOGERROR("Currently no DX12 support has been written!");
+#if defined(D3D12_BACKEND)
+			m_graphicsAPI = m_graphicsAPILoader.LoadGraphicsAPI("D3D12Renderer").Handle;
+			m_activeGraphicsAPI = EGraphicsAPI::DX12;
+#else
+			SFM_LOGERROR("Trying to load in a backend that hasn't been build!\n Make sure to set BUILD_D3D12_BACKEND to ON during the CMake configuration stage!");
+#endif			
 			break;
 		case EGraphicsAPI::OPENGL:
+#if defined(OPENGL_BACKEND)
+			//Load opengl library.
+#else
 			SFM_LOGERROR("Currently no OpenGL support has been written!");
+#endif
 			break;
 		default:
 			SFM_LOGERROR("Unknown Graphics API!");
 			m_activeGraphicsAPI = EGraphicsAPI::UNIDENTIFIED;
-			break;
+			return;
 		}
-
-		if (m_activeGraphicsAPI != EGraphicsAPI::UNIDENTIFIED)
-		{
-			GraphicsAPICreateInfo createInfo =
-			{
-				m_engine,
-				m_window->GetWindowHandle(),
-				m_window->GetWindowWidth(),
-				m_window->GetWindowHeight()
-			};
-
-			m_graphicsAPI->Initialize(std::move(createInfo));
 		
-			//Since the graphics APIs don't have access to the engine: create the events here.
-			m_engine.lock()->GetEventSystem().GetEventDispatcher("Window").sink<SFM::WindowResizeEventArgs>().connect<&IGraphicsAPI::OnFrameBufferResize>(m_graphicsAPI);
-		}
+		GraphicsAPICreateInfo createInfo =
+		{
+			m_engine,
+			m_window->GetWindowHandle(),
+			m_window->GetWindowWidth(),
+			m_window->GetWindowHeight()
+		};
+
+		m_graphicsAPI->Initialize(std::move(createInfo));
+		
+		//Since the graphics APIs don't have access to the engine: create the events here.
+		m_engine.lock()->GetEventSystem().GetEventDispatcher("Window").sink<SFM::WindowResizeEventArgs>().connect<&IGraphicsAPI::OnFrameBufferResize>(m_graphicsAPI);
 	}
 }

@@ -30,6 +30,8 @@ namespace SFM
 		void Initialize(std::weak_ptr<Engine> engine, Window& window, EGraphicsAPI api);
 		void Terminate();
 	
+		void Render();
+
 	private:
 		void LoadGraphicsAPI(EGraphicsAPI api);
 

@@ -30,6 +30,8 @@ namespace SFM
 
 		bool DoesWindowClose() const;
 
+		void UpdateWindowTitleStats(uint32_t frameCountPerSec);
+
 	protected:
 		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		LRESULT CALLBACK LocalWindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
